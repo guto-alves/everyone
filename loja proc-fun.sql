@@ -52,6 +52,7 @@ BEGIN
 END
 GO
 
+ 
 -- FUNCTIONS
 
 DROP FUNCTION f_search_text
@@ -152,6 +153,40 @@ BEGIN
 END
 GO
 
+DROP FUNCTION f_existing_user
+CREATE FUNCTION f_existing_user (@email VARCHAR(20))
+RETURNS BIT 
+AS 
+BEGIN
+	DECLARE @existing BIT
+	SET @existing = 0
+	IF @email IN (SELECT email FROM customer)
+	BEGIN
+		SET @existing = 1
+	END
+	RETURN @existing
+END
+GO
+
+DROP FUNCTION f_validate_login 
+CREATE FUNCTION f_validate_login (@email VARCHAR(50), @password VARCHAR(20))
+RETURNS BIT 
+AS
+BEGIN
+	DECLARE @valid BIT
+	SET @valid = (SELECT * FROM dbo.f_existing_user(@email))
+	IF @valid > 0
+	BEGIN
+		DECLARE @expected VARCHAR(20)
+		SET @expected = (SELECT password FROM customer WHERE email = @email) 
+		IF @password <> @expected 
+		BEGIN
+			SET @valid = 0
+		END
+	END
+	RETURN @valid
+END
+GO
 
 
 -- TESTES
@@ -172,10 +207,5 @@ SELECT * FROM dbo.f_search_size('XL')
 SELECT * FROM dbo.f_search_brand(11)
 
 SELECT * FROM dbo.f_search_type(5)
-
-
-
-
-
 
 
