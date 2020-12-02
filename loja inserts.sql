@@ -50,3 +50,5 @@ INSERT INTO product_size VALUES
 	(131,'M'),
 	(128,'XL'),
 	(129,'M')
+
+INSERT INTO customer VALUES ('12345678911', 'John Cena', 'SP', '08061030', 'john@cena.com', 'johncena20cm')
