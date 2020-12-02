@@ -52,6 +52,67 @@ BEGIN
 END
 GO
 
+DROP PROCEDURE new_sale
+CREATE PROCEDURE new_sale (@customer CHAR(11), @date TIMESTAMP, @sale_id INT OUTPUT)
+AS
+BEGIN
+	INSERT INTO sale(customer, date, status) VALUES (@customer, @date, 0)
+	SET @sale_id = (SELECT MAX(id) FROM sale)
+	RETURN @sale_id
+END
+GO
+
+DROP PROCEDURE add_items 
+CREATE PROCEDURE add_items (@sale_id INT, @product INT, @quantity INT)
+AS
+BEGIN
+	DECLARE @total DECIMAL(9,2)
+	SET @total = @quantity * (SELECT price FROM product WHERE id = @product)
+	INSERT INTO sale_items (@sale_id, @product, @quantity, @total)
+END
+GO
+
+
+DROP PROCEDURE close_sale 
+CREATE PROCEDURE close_sale (@sale_id INT, @card CHAR(12), @success BIT OUTPUT)
+AS
+BEGIN
+	SET @success = 0
+	DECLARE @valid_card BIT
+	EXEC validate_card  @card, @valid_card OUTPUT
+	IF (@valid_card = 1)
+	BEGIN
+		UPDATE sale SET card = @card WHERE id = @sale_id
+		UPDATE sale SET price = (SELECT SUM(total) FROM sale_items WHERE sale = @sale_id)
+		SET @success = 1
+	END
+	RETURN
+END
+GO
+
+DROP PROCEDURE validate_card 
+CREATE PROCEDURE validate_card (@card CHAR(12), @valid BIT OUTPUT )
+AS
+BEGIN
+	DECLARE	@month CHAR(2),
+			@year CHAR(2)
+	SET @month = (SELECT SUBSTRING(validity, 1, 2) FROM card WHERE number = @card)
+	SET @month = (SELECT SUBSTRING(validity, 3, 2) FROM card WHERE number = @card)
+	IF ( YEAR(GETDATE()) <= @year )
+	BEGIN
+		IF ( MONTH(GETDATE()) <= @month )
+		BEGIN
+			SET @valid = 1
+		END
+	END
+	ELSE 
+	BEGIN
+			SET @valid = 0
+	END
+	RETURN
+END
+GO
+
  
 -- FUNCTIONS
 
@@ -188,7 +249,6 @@ BEGIN
 END
 GO
 
-
 -- TESTES
 
 EXEC populate_product 10
@@ -207,5 +267,6 @@ SELECT * FROM dbo.f_search_size('XL')
 SELECT * FROM dbo.f_search_brand(11)
 
 SELECT * FROM dbo.f_search_type(5)
+
 
 
