@@ -52,37 +52,6 @@ BEGIN
 END
 GO
 
-DROP PROCEDURE existing_user
-CREATE PROCEDURE existing_user (@email VARCHAR(20), @existing BIT OUTPUT)
-AS 
-BEGIN
-	SET @existing = 0
-	IF @email IN (SELECT email FROM customer)
-	BEGIN
-		SET @existing = 1
-	END
-	RETURN
-END
-GO
-
-DROP PROCEDURE validate_login 
-CREATE PROCEDURE validate_login (@email VARCHAR(50), @password VARCHAR(20), @valid BIT OUTPUT)
-AS
-BEGIN
-	EXEC existing_user @email, @valid OUTPUT 
-	IF @valid > 0
-	BEGIN
-		DECLARE @expected VARCHAR(20)
-		SET @expected = (SELECT password FROM customer WHERE email = @email) 
-		IF @password <> @expected 
-		BEGIN
-			SET @valid = 0
-		END
-	END
-	RETURN
-END
-GO
-
 DROP PROCEDURE new_sale
 CREATE PROCEDURE new_sale (@customer CHAR(11), @date TIMESTAMP, @sale_id INT OUTPUT)
 AS
@@ -110,35 +79,12 @@ AS
 BEGIN
 	SET @success = 0
 	DECLARE @valid_card BIT
-	EXEC validate_card  @card, @valid_card OUTPUT
+	SET @valid_card = (SELECT dbo.f_validate_card(@card))
 	IF (@valid_card = 1)
 	BEGIN
 		UPDATE sale SET card = @card WHERE id = @sale_id
 		UPDATE sale SET price = (SELECT SUM(total) FROM sale_items WHERE sale = @sale_id)
 		SET @success = 1
-	END
-	RETURN
-END
-GO
-
-DROP PROCEDURE validate_card 
-CREATE PROCEDURE validate_card (@card CHAR(12), @valid BIT OUTPUT )
-AS
-BEGIN
-	DECLARE	@month CHAR(2),
-			@year CHAR(2)
-	SET @month = (SELECT SUBSTRING(validity, 1, 2) FROM card WHERE number = @card)
-	SET @month = (SELECT SUBSTRING(validity, 3, 2) FROM card WHERE number = @card)
-	IF ( YEAR(GETDATE()) <= @year )
-	BEGIN
-		IF ( MONTH(GETDATE()) <= @month )
-		BEGIN
-			SET @valid = 1
-		END
-	END
-	ELSE 
-	BEGIN
-			SET @valid = 0
 	END
 	RETURN
 END
@@ -245,7 +191,63 @@ BEGIN
 END
 GO
 
+DROP FUNCTION f_existing_user
+CREATE FUNCTION f_existing_user (@email VARCHAR(20))
+RETURNS BIT
+AS 
+BEGIN
+	DECLARE @existing BIT
+	SET @existing = 0
+	IF @email IN (SELECT email FROM customer)
+	BEGIN
+		SET @existing = 1
+	END
+	RETURN @existing
+END
 
+
+DROP FUNCTION validate_login 
+CREATE FUNCTION validate_login (@email VARCHAR(50), @password VARCHAR(20))
+RETURNS BIT
+AS
+BEGIN
+	DECLARE @existing BIT,
+			@valid BIT
+	SET @existing = (SELECT dbo.f_existing_user(@email))
+	IF @existing = 1
+	BEGIN
+		SET @valid = 1
+		DECLARE @expected VARCHAR(20)
+		SET @expected = (SELECT password FROM customer WHERE email = @email) 
+		IF @password <> @expected 
+		BEGIN
+			SET @valid = 0
+		END
+	END
+	RETURN @valid
+END
+GO
+
+DROP FUNCTION validate_card 
+CREATE FUNCTION validate_card (@card CHAR(12))
+RETURNS BIT 
+AS
+BEGIN
+	DECLARE	@valid BIT, 
+			@month CHAR(2),
+			@year CHAR(2)
+	SET @valid = 0
+	SET @month = (SELECT SUBSTRING(validity, 1, 2) FROM card WHERE number = @card)
+	SET @month = (SELECT SUBSTRING(validity, 3, 2) FROM card WHERE number = @card)
+	IF ( YEAR(GETDATE()) <= @year )
+	BEGIN
+		IF ( MONTH(GETDATE()) <= @month )
+		BEGIN
+			SET @valid = 1
+		END
+	END
+END
+GO
 
 -- TESTES
 
