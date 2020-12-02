@@ -191,6 +191,32 @@ BEGIN
 END
 GO
 
+DROP FUNCTION f_all_colors
+CREATE FUNCTION f_all_colors (@product INT)
+RETURNS @all_colors TABLE(
+size VARCHAR(2)
+)
+AS
+BEGIN
+	INSERT INTO @all_colors
+		SELECT color FROM product_color WHERE product = @product
+	RETURN
+END
+GO
+
+DROP FUNCTION f_all_sizes
+CREATE FUNCTION f_all_sizes (@product INT)
+RETURNS @all_sizes TABLE(
+size VARCHAR(2)
+)
+AS
+BEGIN
+	INSERT INTO @all_sizes
+		SELECT size FROM product_size WHERE product = @product
+	RETURN
+END
+GO
+
 DROP FUNCTION f_existing_user
 CREATE FUNCTION f_existing_user (@email VARCHAR(20))
 RETURNS BIT
