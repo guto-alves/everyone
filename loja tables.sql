@@ -195,24 +195,71 @@ SELECT * FROM product
 
 
 INSERT INTO product_color VALUES
-	(120,'Black'),
-	(122,'Blue'),
-	(124,'Yellow'),
-	(130,'Red'),
-	(131,'Blue'),
-	(128,'Blue'),
-	(129,'Red')
+	(1,'Black'),
+    (1,'White'),
+	(2,'Black'),
+    (2,'White'),
+    (3,'Red'),
+    (3,'Blue'),
+    (3,'Yellow'),
+    (4,'Blue'),
+    (5,'Blue'),
+    (6,'Blue'),
+	(4,'Black'),
+    (5,'Black'),
+    (6,'Black'),
+    (7,'White'),
+    (8,'Blue'),
+    (9,'Red'),
+    (10,'Black'),
+    (11,'Black'),
+    (12,'Black'),
+    (13,'Yellow'),
+    (14,'White'),
+    (15,'Red'),
+    (16,'Black'),
+    (13,'White'),
+    (14,'Blue'),
+    (15,'Yellow'),
+    (16,'Red')
 
-SELECT * FROM product_color
+SELECT * FROM product_color 
 
-
+    
 INSERT INTO product_size VALUES
-	(120,'XS'),
-	(122,'S'),
-	(124,'S'),
-	(130,'L'),
-	(131,'M'),
-	(128,'XL'),
-	(129,'M')
+	(1,'M'),
+    (1,'L'),
+    (2,'M'),
+    (2,'L'),
+    (2,'XL'),
+    (3,'XL'),
+    (3,'M'),
+    (4,'XS'),
+    (4,'M'),
+    (4,'L'),
+    (5,'M'),
+    (5,'S'),
+    (6,'XL'),
+    (6,'L'),
+    (7,'XS'),
+	(7,'S'),
+	(7,'M'),
+    (8,'S'),
+    (9,'M'),
+    (10,'M'),
+    (11,'L'),
+    (12,'L'),
+    (13,'XL'),
+    (13,'L'),
+    (13,'M'),
+    (14,'M'),
+    (15,'M'),
+    (14,'L'),
+    (15,'L'),
+    (14,'XS'),
+    (15,'S'),
+    (16,'M'),
+    (16,'XL'),
+    (16,'XS')
 
 SELECT * FROM product_size
