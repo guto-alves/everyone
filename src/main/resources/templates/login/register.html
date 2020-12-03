@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="https://thymeleaf.org" th:replace="~{fragments/layout :: base('Sign up', ~{::body})}">
+<body>
+	<div class="mt-3 row justify-content-center" align="center">
+		<div class="col-4">
+			<div class="card">
+				<h4 class="card-header">BECOME A CUSTOMER</h4>
+
+				<form action="#" th:action="@{/register}" method="post" th:object="${customer}">
+					<div class="card-body">
+						<div class="form-group">
+							<input type="email" class="form-control" title="Email" placeholder="Email address" th:field="*{email}"
+								th:classappend="${#fields.hasErrors('email')}? 'is-invalid'">
+
+							<div class="invalid-feedback" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Name Error</div>
+						</div>
+
+						<div class="form-group">
+							<input type="password" class="form-control" title="Password" placeholder="Password" th:field="*{password}"
+								th:classappend="${#fields.hasErrors('password')}? 'is-invalid'">
+
+							<div class="invalid-feedback" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Error</div>
+						</div>
+
+						<div class="form-group">
+							<input type="text" class="form-control" title="Fist Name" placeholder="First Name" th:field="*{firstName}"
+								th:classappend="${#fields.hasErrors('firstName')}? 'is-invalid'">
+
+							<div class="invalid-feedback" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">Error</div>
+						</div>
+
+						<div class="form-group">
+							<input type="text" class="form-control" title="Last Name" placeholder="Last Name" th:field="*{lastName}"
+								th:classappend="${#fields.hasErrors('lastName')}? 'is-invalid'">
+
+							<div class="invalid-feedback" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">Error</div>
+						</div>
+
+						<div class="form-group">
+							<input type="date" class="form-control" title="Date of Birth" placeholder="Date of Birth" th:field="*{birthDate}"
+								th:classappend="${#fields.hasErrors('birthDate')}? 'is-invalid'">
+
+							<div class="invalid-feedback" th:if="${#fields.hasErrors('birthDate')}" th:errors="*{birthDate}">Error</div>
+						</div>
+
+						<div class="form-group">
+							<div class="custom-control custom-radio custom-control-inline">
+								<input type="radio" id="customRadioInline1" name="genderRadio" class="custom-control-input" value="Male"
+									th:field="*{gender}">
+								<label class="custom-control-label" for="customRadioInline1">Male</label>
+							</div>
+
+							<div class="custom-control custom-radio custom-control-inline" th:field="*{gender}"
+								th:classappend="${#fields.hasErrors('gender')}? 'is-invalid'">
+								<input type="radio" id="customRadioInline2" name="genderRadio" class="custom-control-input" value="Female"
+									th:field="*{gender}">
+								<label class="custom-control-label" for="customRadioInline2">Female</label>
+							</div>
+
+							<div class="invalid-feedback" th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}">Error</div>
+						</div>
+
+
+						<button type="submit" class="form-control btn btn-primary">JOIN US</button>
+					</div>
+
+					<div class="form-group">
+						<p>
+							Already a member?
+							<a th:href="@{/login}">Sign in.</a>
+						</p>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

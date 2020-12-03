@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="https:/www.thymeleaf.org" th:replace="~{fragments/layout :: base(${clothe.name}, ~{::body})}">
+<body>
+	<div class="row mt-3">
+
+		<!-- Images -->
+		<div class="col-md-8">
+			<!-- width="40px" -->
+			<div class="text-center">
+				<img class="img-fluid" width="413px" height="413px" src="" th:src="${clothe.imageUrl}" alt="Clothe image">
+			</div>
+
+			<p th:text="${clothe.description}"></p>
+		</div>
+
+		<!-- Info -->
+		<div class="col-md-4">
+			<h3 th:text="${clothe.name}"></h3>
+			<h3 th:text="'$ ' + ${clothe.price}"></h3>
+			<hr>
+
+			<span class="font-weight-bold">Color: </span>
+			<span th:text="${clothe.color.name}"></span>
+
+			<div class="form-group">
+				<label class="font-weight-bold">Size:</label>
+				<select class="form-control">
+					<option>P</option>
+					<option>M</option>
+					<option>G</option>
+					<option>GG</option>
+				</select>
+			</div>
+
+			<a id="goToCart" href="#" th:href="@{/cart}" class="btn btn-success btn-block mb-2">Go to cart</a>
+
+			<button type="button" id="addToCart" class="btn btn-success btn-block mb-2">Add to cart</button>
+
+			<form action="#" method="post">
+				<a href="#" class="btn btn-outline-success btn-block" role="button">Buy now</a>
+			</form>
+		</div>
+	</div>
+
+	<script type="text/javascript" th:inline="javascript">
+		var inCart = /*[[${isCart}]]*/null;
+
+		if (inCart) {
+			$("#goToCart").show();
+			$("#addToCart").hide();
+		} else {
+			$("#goToCart").hide();
+			$("#addToCart").show();
+		}
+
+		var clotheId = /*[[${clothe.id}]]*/null;
+
+		function addToCart() {
+			$.post("/cart/add/" + clotheId, function(data) {
+				$("#goToCart").show();
+				$("#addToCart").hide();
+			}).fail(function() {
+				alert("Error adding to cart");
+			});
+		}
+
+		$("#addToCart").on("click", function() {
+			addToCart();
+		});
+	</script>
+</body>
+</html>

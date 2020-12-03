@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" th:replace="~{fragments/layout :: base('Clothes', ~{::body})}">
+<body>
+	<div class="row mt-3">
+
+		<!-- Filters in the left side-->
+		<aside class="col-md-3 blog-asize border-rounded">
+
+			<form id="filterForm" action="#" method="get" th:action="@{/clothes/sort}">
+				<div class="form-group">
+					<button type="submit" class="btn btn-primary form-control">Filter</button>
+				</div>
+
+				<!-- Category -->
+				<div class="accordion" id="categoryAccordion">
+					<div class="card">
+						<div class="card-header" id="headingCategory">
+							<h2 class="mb-0">
+								<button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
+									data-target="#collapseCategory" aria-expanded="false" aria-controls="collapseCategory">Category</button>
+							</h2>
+						</div>
+						<div id="collapseCategory" class="collapse" aria-labelledby="headingCategory" data-parent="#categoryAccordion">
+							<div class="card-body">
+
+								<div class="input-group mb-3">
+									<input type="text" id="categoryFilter" onkeyup="filter()" class="form-control" placeholder="Search">
+								</div>
+
+								<div class="form-check" th:each="category : ${categories}">
+									<input class="form-check-input" type="checkbox" id="categoryCheckbox" name="color" th:value="${category}"
+										th:checked="${filterCategories != null && #lists.contains(filterCategories, category)}">
+									<label class="form-check-label" for="categoryCheckbox" th:text="${category}">Category Name</label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Color -->
+				<div class="accordion" id="colorAccordion">
+					<div class="card">
+						<div class="card-header" id="headingColor">
+							<h2 class="mb-0">
+								<button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
+									data-target="#collapseColor" aria-expanded="false" aria-controls="collapseBrand">Color</button>
+							</h2>
+						</div>
+						<div id="collapseColor" class="collapse" aria-labelledby="headingColor" data-parent="#colorAccordion">
+							<div class="card-body">
+
+								<div class="input-group mb-3">
+									<input class="form-control" type="text" id="brandFilter" onkeyup="filter()" placeholder="Search">
+								</div>
+
+								<div class="form-check" th:each="color : ${colors}">
+									<input class="form-check-input" type="checkbox" id="colorsCheckbox" name="color" th:value="${color}"
+										th:checked="${filterColors != null && #lists.contains(filterColors, color)}">
+									<label class="form-check-label" for="colorsCheckbox" th:text="${color}">Color Name</label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Brand -->
+				<div class="accordion" id="brandAccordion">
+					<div class="card">
+						<div class="card-header" id="headingBrand">
+							<h2 class="mb-0">
+								<button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
+									data-target="#collapseBrand" aria-expanded="false" aria-controls="collapseBrand">Brand</button>
+							</h2>
+						</div>
+						<div id="collapseBrand" class="collapse" aria-labelledby="headingBrand" data-parent="#brandAccordion">
+							<div class="card-body">
+
+								<div class="input-group mb-3">
+									<input class="form-control" type="text" id="brandFilter" onkeyup="filter()" placeholder="Search">
+								</div>
+
+								<div class="form-check" th:each="brand : ${brands}">
+									<input class="form-check-input" type="checkbox" id="brandCheckbox" name="brand" th:value="${brand}"
+										th:checked="${filterBrands != null && #lists.contains(filterBrands, brand)}">
+									<label class="form-check-label" for="brandCheckbox" th:text="${brand}">Brand Name</label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Prices -->
+				<div class="accordion" id="priceAccordion">
+					<div class="card">
+						<div class="card-header" id="headingPrice">
+							<h2 class="mb-0">
+								<button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
+									data-target="#collapsePrice" aria-expanded="false" aria-controls="collapsePrice">Price</button>
+							</h2>
+						</div>
+						<div id="collapsePrice" class="collapse" aria-labelledby="headingPrice" data-parent="#priceAccordion">
+							<div class="card-body">
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text">Under $</span>
+									</div>
+									<input type="number" class="form-control" id="priceInput" onkeyup="checkPrice()" onchange="checkPrice()"
+										name="price" th:value="${filterPrice?: ''}" min="0" step="10">
+									<div class="input-group-append">
+										<span class="input-group-text">.00</span>
+									</div>
+								</div>
+
+								<span id="priceWarning" class="text-primary">All Prices</span>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</form>
+
+		</aside>
+
+		<!-- Clothes  -->
+		<div class="col-sm-9 blog-main">
+
+			<div class="row">
+				<div class="col-md-4" th:each="clothe : ${clothes}">
+					<div class="card mb-4 shadow-lg">
+						<a href="#" th:href="@{/clothes/details/{id}(id=${clothe.id}) }">
+							<img class="card-img-top" alt="Clothe image" th:src="${clothe.imageUrl}">
+						</a>
+
+						<div class="card-body" id="#outer">
+							<h5 class="card-title" th:text="${clothe.name} + ' - ' + ${clothe.id}">Name</h5>
+
+							<p class="card-text text-truncate" th:text="${clothe.description}">Description</p>
+
+							<h4 class="card-title" th:text="${clothe.price}">R$ 349,99</h4>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+	<nav aria-label="Page navigation">
+		<ul class="pagination justify-content-center">
+			<li class="page-item disabled">
+				<a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+			</li>
+			<li class="page-item">
+				<a class="page-link" href="#">1</a>
+			</li>
+			<li class="page-item active">
+				<a class="page-link" href="#">2</a>
+			</li>
+			<li class="page-item">
+				<a class="page-link" href="#">3</a>
+			</li>
+			<li class="page-item">
+				<a class="page-link" href="#">Next</a>
+			</li>
+		</ul>
+	</nav>
+
+	<script th:inline="javascript">
+		function checkPrice() {
+			var price = $("#priceInput").val();
+			toggleWarningPrice(price);
+		}
+
+		function toggleWarningPrice(price) {
+			if (price == null || price == "0" || price == "") {
+				$("#priceWarning").show();
+			} else {
+				$("#priceWarning").hide();
+			}
+		}
+
+		$(document).ready(function() {
+			var filterPrice = /*[[${filterPrice}]]*/null;
+			toggleWarningPrice(filterPrice);
+
+			$("#filterForm").submit(function(event) {
+				var price = $("#priceInput").val();
+
+				if (price == "0" || price == "") {
+					$("#priceInput").remove();
+				}
+			});
+		});
+	</script>
+</body>
+</html>

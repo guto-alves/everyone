@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="https://thymeleaf.org" th:replace="~{fragments/layout :: base('Profile', ~{::body})}">
+<body>
+	<div class="container-fluid col-md-6 mt-3">
+		<h4 class="font-weight-bold text-center">Profile</h4>
+		<hr>
+
+		<div class="alert alert-success" th:if="${message != null}">
+			<button type="button" class="close" data-dismiss="alert">&times;</button>
+			<span>Your changes have been successfully saved.</span>
+		</div>
+
+		<form action="#" method="post" th:object="${customer}" th:action="@{/customer/edit-profile}">
+			<div class="form-group">
+				<label for="firstNameInput">First Name</label>
+				<input type="text" id="firstNameInput" class="form-control" th:field="*{firstName}">
+			</div>
+
+			<div class="form-group">
+				<label for="lastNameInput">Last Name</label>
+				<input type="text" id="lastNameInput" class="form-control" th:field="*{lastName}">
+			</div>
+
+			<div class="form-group">
+				<label for="gender">Gender</label>
+				<select class="custom-select" th:field="*{gender}">
+					<option value="Male" th:value="'Male'" th:selected="${gender == 'Male'}">Male</option>
+					<option value="Female" th:value="'Female'" th:selected="${gender == 'Female'}">Female</option>
+				</select>
+			</div>
+
+			<div class="text-center">
+				<button type="submit" class="btn btn-primary">Save</button>
+			</div>
+		</form>
+	</div>
+</body>
+</html>

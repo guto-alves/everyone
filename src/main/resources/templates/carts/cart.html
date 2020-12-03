@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="https://thymeleaf.org" th:replace="~{fragments/layout :: base('Cart', ~{::body})}">
+<body>
+	<div class="container-fluid">
+
+		<div class="col text-center mt-3" th:if="${#sets.isEmpty(cart.items)}">
+			<h3 class="font-weight-bold">Shopping Cart</h3>
+
+			<span class="text-center">
+				Your cart is empty. Keep shopping to
+				<a href="#" th:href="@{/clothes}">find a clothe!</a>
+			</span>
+		</div>
+
+		<div class="row mt-3" th:if="${!#sets.isEmpty(cart.items)}">
+
+			<!-- Clothes -->
+			<div class="col-md-8">
+				<h3 class="text-primary font-weight-bold">My cart</h3>
+
+				<div class="card mb-4 shadow-md" th:each="item : ${cart.items}">
+					<div class="card-body">
+						<div class="row">
+							<div class="col-sm-2">
+								<div style="min-height: 20px; min-width: 20px; width: 120px; height: 120px">
+									<a href="#" th:href="@{/clothes/details/{id}(id=${item.clothe.id})}">
+										<img class="img-thumbnail" alt="Clothe image" th:src="${item.clothe.imageUrl}">
+									</a>
+								</div>
+							</div>
+							<div class="col-md-10">
+								<h5 class="card-title font-weight-bold" th:text="${item.clothe.name}">Name</h5>
+
+								<p class="card-text text-truncate" th:text="${item.clothe.description}">Description</p>
+
+								<p th:text="'Size: ' + 'M'"></p>
+
+								<p th:text="'Color: ' + ${item.clothe.color.name}"></p>
+
+								<form action="#" method="post" th:action="@{/cart/remove/{clotheId}(clotheId=${item.clothe.id})}">
+									<button type="submit" class="btn btn-outline-danger btn-sm" id="removeItem">Remove</button>
+								</form>
+							</div>
+						</div>
+						<hr>
+
+						<div class="form-row align-items-center">
+							<label class="col-sm-2 col-form-label">Amount:</label>
+							<div class="col-sm-2">
+								<input id="quantityInput" type="number" class="form-control" placeholder="Quantity" min="0" step="1"
+									th:value="${item.quantity}" th:name="${item.clothe.id}">
+							</div>
+
+							<div class="col text-right">
+								<h5 th:id="${item.clothe.id}" class="card-title" th:text="'$' + ${item.clothe.price * item.quantity}">R$ 349,99</h5>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Cart Info  -->
+			<div class="col-md-4">
+				<h3 class="text-primary font-weight-bold">Purchase summary</h3>
+
+				<div class="card">
+					<div class="card-body">
+						<label class="text-muted">Total</label>
+						<!-- <h3 th:text="${cart.total}"></h3> -->
+						<h3 id="total" th:text="${'$' + #aggregates.sum(cart.items.![clothe.price * quantity])}">$165,99</h3>
+
+						<hr>
+
+						<a href="#" class="btn btn-success btn-block" th:href="@{/cart/checkout}">Checkout</a>
+
+						<a href="#" th:href="@{/clothes}" class="btn btn-outline-primary btn-block mt-3">Choose more products</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript" th:inline="javascript">
+		$("input").bind("keyup change", function() {
+			var newQuantity = $(this).val();
+			
+			if (newQuantity === "") {
+				newQuantity = 1;
+			}
+			
+			var clotheId = $(this).attr("name");
+
+			$("body").find("*").attr("disabled", "disabled");
+			$("body").find("a").click(function (e) { e.preventDefault(); });
+			
+			$.post("/cart/update-quantity", {
+				clotheid : clotheId,
+				newquantity : newQuantity
+			}, function(data) {
+				var values = data.split("\n");
+				
+				var updatedPrice = values[0].replace(",", ".");
+				var total = values[1].replace(",", ".");
+				
+				$("#" + clotheId).text("$" + updatedPrice);
+				$("#total").text("$" + total);
+			}).fail(function(data) {
+				alert( "Error: please try again later");
+			}).always(function(data) {
+				$("body").find("*").removeAttr("disabled");
+				$("body").find("a").unbind("click");
+			});
+		});
+	</script>
+</body>
+</html>

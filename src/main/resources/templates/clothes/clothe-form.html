@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" th:replace="~{fragments/layout :: base ('Clothe', ~{::body})}">
+<body>
+	<div class="container-fluid col-md-4 mt-3 mb-3">
+		<div class="card">
+			<div class="card-body">
+				<h4 class="card-title">Register Clothe</h4>
+
+				<div th:if="${message != null}" class="alert- alert-success" th:text="${message}" role="alert"></div>
+
+				<form action="#" method="post" th:action="@{/clothes/new}" th:object="${clothe}">
+					<div class="form-group">
+						<label for="nameInput">Name</label>
+						<input type="text" id="nameInput" class="form-control" placeholder="Name" th:field="*{name}">
+					</div>
+
+					<div class="form-group">
+						<label for="descriptionTextarea">Description</label>
+						<textarea id="descriptionTextarea" class="form-control" rows="3" th:field="*{description}" maxlength="255">
+						</textarea>
+					</div>
+
+					<div class="form-row">
+						<div class="form-group col-md-4">
+							<label for="priceInput">Price</label>
+							<input type="number" id="priceInput" class="form-control" placeholder="Price" min="10" step=".01" value="10,00"
+								th:field="*{price}">
+						</div>
+
+						<div class="form-group col-md-4">
+							<label for="discountInput">Discount</label>
+							<input type="range" id="discountInput" class="form-control-range" placeholder="Discount" min="0" max="99"
+								step="1" th:field="*{discount}">
+						</div>
+
+						<div class="form-group col-md-4">
+							<label for="stockInput">Stock</label>
+							<input type="number" id="stockInput" class="form-control" placeholder="Quantity in stock" min="1"
+								th:field="*{stock}">
+						</div>
+					</div>
+
+					<div class="form-row">
+						<div class="form-group col-md-6">
+							<label for="colorSelect">Color</label>
+
+							<select class="form-control" th:field="*{color}" id="colorSelect">
+								<option th:each="c : ${colors}" th:value="${c.id}" th:text="${c.name}"></option>
+							</select>
+						</div>
+
+						<div class="form-group col-md-6">
+							<label for="brandSelect">Brand</label>
+
+							<select id="brandSelect" class="form-control" th:field="*{brand}">
+								<option th:each="b : ${brands}" th:value="${b.id}" th:text="${b.name}">Brand Name</option>
+							</select>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="urlInput">Image URL</label>
+
+						<input type="url" id="urlInput" class="form-control" th:field="*{imageUrl}">
+					</div>
+
+					<button type="submit" class="btn btn-primary form-control">Add</button>
+				</form>
+			</div>
+		</div>
+	</div>
+	
+	<script type="text/javascript">
+		$("#discountInput").on("change", function() {
+			alert("Discount = " + $("#discountInput").val() + "%");
+		});
+	</script>
+</body>
+</html>

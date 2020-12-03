@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" th:replace="~{fragments/layout :: base ('Color', ~{::body})}">
+<body>
+	<div class="row mt-3">
+		<div class="col-md-6">
+			<div class="card">
+				<div class="card-body">
+					<h4 class="card-title">Register new color</h4>
+
+					<form action="#" method="post" th:action="@{/color/new}" th:object="${color}">
+						<div class="form-group">
+							<input type="text" id="nameInput" class="form-control" aria-describedby="nameFeedback" placeholder="Name"
+								th:field="*{name}" th:classappend="${#fields.hasErrors('name')}? 'is-invalid'">
+
+							<div id="nameFeedback" class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name
+								Error</div>
+						</div>
+
+						<button type="submit" class="btn btn-primary form-control">Add</button>
+					</form>
+				</div>
+			</div>
+
+			<div class="alert alert-success mt-3" th:if="${!#strings.isEmpty(message)}" th:text="${message}" role="alert">
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+			</div>
+		</div>
+
+		<div class="col-md-6">
+			<h3>List of Colors</h3>
+
+			<div class="form-group">
+				<input type="text" id="filterInput" class="form-control" onkeyup="filter()" placeholder="Search color">
+			</div>
+
+			<div class="table-scroll">
+				<table id="table" class="table table-striped table-bordered table-hover">
+					<thead class="thead-dark">
+						<tr>
+							<th>Name</th>
+						</tr>
+					</thead>
+					<tbody style="height: 10px !important; overflow: scroll;">
+						<tr th:each="color : ${colors}">
+							<td th:text="${color.name}"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		function filter() {
+			var input = document.getElementById("filterInput");
+			var filter = input.value.toUpperCase();
+			var table = document.getElementById("table");
+			var tr = table.getElementsByTagName("tr");
+
+			for (i = 0; i < tr.length; i++) {
+				var td = tr[i].getElementsByTagName("td")[0];
+
+				if (td) {
+					var txtValue = td.textContent || td.innerText;
+
+					if (txtValue.toUpperCase().indexOf(filter) > -1) {
+						tr[i].style.display = "";
+					} else {
+						tr[i].style.display = "none";
+					}
+				}
+			}
+		}
+	</script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="https://thymeleaf.org" th:replace="~{fragments/layout :: base('Cart', ~{::body})}">
+<body>
+	<div class="container-fluid col-md-4 mt-3 mb-3">
+
+		<div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="5000" style="display: none;">
+
+			<button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+				<span aria-hidden="true" class="text-white">&times;</span>
+			</button>
+
+			<div class="toast-body text-white bg-success font-weight-bold">Hello, world! This is a toast message.</div>
+		</div>
+
+		<!-- <div id="alertSuccess" class="alert alert-success" style="display: none;">
+			<span id="successMsg"></span>
+		</div>
+
+		<div id="alertError" class="alert alert-danger" style="display: none;">
+			<span id="errorMsg"></span>
+		</div> -->
+
+		<h3 class="font-weight-bold text-center">Account</h3>
+
+		<form id="passwordForm" action="#" method="post">
+			<div class="form-group">
+				<label for="emailInput">Email</label>
+				<input type="email" id="emailInput" class="form-control" disabled="disabled" th:value="${email}">
+			</div>
+
+			<hr>
+
+			<h5>Password</h5>
+
+			<div class="form-group">
+				<input type="password" id="currentPasswordInput" class="form-control" placeholder="Enter Current Password"
+					name="currentPassword">
+			</div>
+
+			<div class="form-group">
+				<input type="password" id="newPasswordInput" class="form-control" placeholder="Enter New Password"
+					name="newPassword" min="6">
+			</div>
+
+			<div class="form-group">
+				<input type="password" id="reNewPasswordInput" class="form-control" placeholder="Re-type New Password"
+					name="reNewPassword">
+			</div>
+
+			<span id="error" class="text-danger" style="display: none">Your new password does not match confirmation.</span>
+
+			<hr>
+
+			<div class="form-group text-center">
+				<button type="submit" class="btn btn-primary">Save Password</button>
+			</div>
+		</form>
+	</div>
+
+	<script type="text/javascript" th:inline="javascript">
+		var serverContext = /*[[@{/}]]*/null;
+
+		$("#passwordForm").submit(function(event) {
+			var currentPassword = $("#currentPasswordInput").val().trim();
+			var newPassword = $("#newPasswordInput").val().trim();
+			var reNewPassword = $("#reNewPasswordInput").val().trim();
+
+			if (newPassword === "" || newPassword !== reNewPassword) {
+				$("#error").show();
+				event.preventDefault();
+				return;
+			}
+
+			$.post(serverContext + "customer/edit-account", {
+				currentpassword : currentPassword,
+				newpassword : newPassword
+			}).done(function(data) {
+				$('.toast').toast('dispose')
+				$(".toast").show();
+				$('.toast-body').text(data);
+				$('.toast').toast('show');
+			}).fail(function(data) {
+				$('.toast').toast('dispose')
+				$(".toast").show();
+				$('.toast-body').text(data.responseJSON.message);
+				$('.toast').toast('show');
+			});
+
+			event.preventDefault();
+		});
+	</script>
+</body>
+</html>

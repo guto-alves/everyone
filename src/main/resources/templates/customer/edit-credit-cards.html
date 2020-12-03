@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="https://thymeleaf.org" th:replace="~{fragments/layout :: base('Cart', ~{::body})}">
+<body>
+	<div class="container-fluid col-md-6 mt-3">
+		<h3 class="font-weight-bold text-center">Payment methods</h3>
+		<hr>
+
+		<div class="alert alert-success" th:if="${success != null}">
+			<button type="button" class="close" data-dismiss="alert">&times;</button>
+			<span>Your changes have been successfully saved.</span>
+		</div>
+
+		<form action="#" method="post" th:action="@{/customer/edit-credit-cards}">
+			<div class="border p-3">
+				<div class="form-check ">
+					<input type="checkbox" class="form-check-input" name="savecards" th:checked="${customer.saveCards}">
+					<label class="form-check-label">Keep transaction information for further purchases</label>
+				</div>
+			</div>
+
+			<div class="row">
+				<button type="submit" class="btn btn-primary mx-auto mt-3">Save</button>
+			</div>
+		</form>
+
+		<hr>
+		
+		<!-- Saved Cards List -->
+		<div class="row df db-sm mb-3" style="border-bottom-style: dotted; border-bottom-width: thin;">
+			<div class="fx pb5">
+				<img alt="" src="../static/images/mastercard-icon.jpg" th:src="@{/images/mastercard-icon.jpg}">
+				<label class="title ellipsis">**** **** **** <b>3800</b> | EXP: <b>08/28</b></label>
+			</div>
+			<div class="col text-right">
+				<a href="#" class="btn btn-sm btn-danger">Delete</a>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

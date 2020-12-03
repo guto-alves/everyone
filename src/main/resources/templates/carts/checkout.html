@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://thymeleaf.org" th:replace="~{fragments/layout :: base('Checkout', ~{::body})}">
+<body>
+	<div class="container-fluid">
+		<div class="row mt-3">
+
+			<!-- Payment Method -->
+			<div class="col-md-8">
+				<h3 class="font-weight-bold">Checkout</h3>
+				<hr>
+				
+				<h5 class="font-weight-bold">Payment Method</h5>
+				
+				<div class="custom-control custom-radio">
+					<input type="radio" id="slipRadio" name="paymentMethod" class="custom-control-input" value="boleto" checked="checked">
+					<label class="custom-control-label" for="slipRadio">Pay with Bank Slip</label>
+				</div>
+
+				<div class="custom-control custom-radio">
+					<input type="radio" id="cardRadio" name="paymentMethod" class="custom-control-input" value="card">
+					<label class="custom-control-label" for="cardRadio">Credit card</label>
+				</div>
+
+				<hr>
+				
+				<!-- Form to use new card -->
+				<div class="card mt-3">
+					<div class="card-header">
+						<h4>Add a new card</h4>
+					</div>
+					<div class="card-body">
+						<div class="form-group">
+							<label for="nameOnCardInput">Name on Card</label>
+							<input type="text" id="nameOnCardInput" class="form-control" placeholder="Name on Card">
+						</div>
+
+						<div class="form-group">
+							<label for="cardNumberInput">CPF</label>
+							<input type="text" id="cardNumberInput" class="form-control" placeholder="CPF">
+						</div>
+
+						<div class="form-group">
+							<label for="cardNumberInput">Card Number</label>
+							<input type="text" id="cardNumberInput" class="form-control" placeholder="Card Number">
+						</div>
+
+						<div class="form-row">
+							<div class="col">
+								<div class="form-group">
+									<label for="cardNumberInput">MM</label>
+									<input type="month" id="cardNumberInput" class="form-control" placeholder="MM">
+								</div>
+							</div>
+
+							<div class="col mr-3">
+								<div class="form-group">
+									<label for="cardNumberInput">YYYY</label>
+									<input type="text" id="cardNumberInput" class="form-control" placeholder="YYYY">
+								</div>
+							</div>
+
+							<div class="col">
+								<div class="form-group">
+									<label for="securityCodeInput">Security Code</label>
+									<input type="text" id="securityCodeInput" class="form-control" placeholder="Security Code">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Summary -->
+			<div class="col-md-4">
+				<h3 class="text-primary font-weight-bold">Summary</h3>
+
+				<div class="card shadow-lg">
+					<div class="card-body">
+						<label class="text-muted">Original price</label>
+						<h4 th:text="${'$' + #aggregates.sum(cart.items.![clothe.price * quantity])}">$ 165,99</h4>
+
+						<label class="text-muted">
+							Discounts</label>
+							<h4>- $0,00</h4>
+
+							<hr>
+
+							<div class="form-row">
+								<div class="col">
+									<h4 class="font-weight-bold">Total</h4>
+								</div>
+								<div class="col text-right">
+									<h3 class="font-weight-bold" th:text="${'$' + #aggregates.sum(cart.items.![clothe.price * quantity])}">$ 100,00</h3>
+								</div>
+							</div>
+
+							<div style="font-size: 12px; line-height: 19px; margin-bottom: 8px;">
+								<span>
+									By completing your purchase you agree to these
+									<a href="#" class="text-decoration-none">Terms of Service</a>
+									.
+								</span>
+							</div>
+
+							<form action="#" method=post th:action="@{/cart/checkout}">
+								<button type="submit" class="btn btn-success form-control">
+									<b>Complete Payment</b>
+								</button>
+							</form>
+					</div>
+				</div>
+			</div>
+
+
+		</div>
+	</div>
+</body>
+</html>
