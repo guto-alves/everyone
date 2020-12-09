@@ -13,7 +13,7 @@ public class CartItemId implements Serializable {
 	private Cart cart;
 
 	@ManyToOne
-	private Clothe clothe;
+	private Product product;
 
 	public Cart getCart() {
 		return cart;
@@ -23,12 +23,12 @@ public class CartItemId implements Serializable {
 		this.cart = cart;
 	}
 
-	public Clothe getClothe() {
-		return clothe;
+	public Product getProduct() {
+		return product;
 	}
 
-	public void setClothe(Clothe clothe) {
-		this.clothe = clothe;
+	public void setProduct(Product product) {
+		this.product = product;
 	}
 
 	@Override
@@ -36,7 +36,7 @@ public class CartItemId implements Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((cart == null) ? 0 : cart.hashCode());
-		result = prime * result + ((clothe == null) ? 0 : clothe.hashCode());
+		result = prime * result + ((product == null) ? 0 : product.hashCode());
 		return result;
 	}
 
@@ -54,10 +54,10 @@ public class CartItemId implements Serializable {
 				return false;
 		} else if (!cart.equals(other.cart))
 			return false;
-		if (clothe == null) {
-			if (other.clothe != null)
+		if (product == null) {
+			if (other.product != null)
 				return false;
-		} else if (!clothe.equals(other.clothe))
+		} else if (!product.equals(other.product))
 			return false;
 		return true;
 	}

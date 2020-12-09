@@ -19,9 +19,9 @@ public class SaleItem {
 	public SaleItem() {
 	}
 
-	public SaleItem(Sale sale, Clothe clothe, int quantity, double price, int discount) {
+	public SaleItem(Sale sale, Product product, int quantity, double price, int discount) {
 		id.setSale(sale);
-		id.setClothe(clothe);
+		id.setProduct(product);
 		this.quantity = quantity;
 		this.price = price;
 		this.discount = discount;
@@ -40,12 +40,12 @@ public class SaleItem {
 		this.id.setSale(sale);
 	}
 
-	public Clothe getClothe() {
-		return id.getClothe();
+	public Product getClothe() {
+		return id.getProduct();
 	}
 
-	public void setClothe(Clothe clothe) {
-		this.id.setClothe(clothe);
+	public void setClothe(Product product) {
+		this.id.setProduct(product);
 	}
 
 	public int getQuantity() {

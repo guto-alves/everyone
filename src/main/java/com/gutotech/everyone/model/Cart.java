@@ -38,8 +38,8 @@ public class Cart {
 		this.customer = customer;
 	}
 
-	public boolean contains(Clothe clothe) {
-		return items.stream().filter(item -> item.getClothe().equals(clothe)).limit(1).count() == 1;
+	public boolean contains(Product product) {
+		return items.stream().filter(item -> item.getClothe().equals(product)).limit(1).count() == 1;
 	}
 
 	public Long getId() {

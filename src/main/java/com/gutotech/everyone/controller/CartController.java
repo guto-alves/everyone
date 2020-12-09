@@ -22,14 +22,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.gutotech.everyone.model.Cart;
 import com.gutotech.everyone.model.CartItem;
-import com.gutotech.everyone.model.Clothe;
+import com.gutotech.everyone.model.Product;
 import com.gutotech.everyone.model.CreditCard;
 import com.gutotech.everyone.model.Customer;
 import com.gutotech.everyone.model.PaymentFormDto;
 import com.gutotech.everyone.model.Sale;
 import com.gutotech.everyone.model.SaleItem;
 import com.gutotech.everyone.service.CartItemService;
-import com.gutotech.everyone.service.ClotheService;
+import com.gutotech.everyone.service.ProductService;
 import com.gutotech.everyone.service.CreditCardService;
 import com.gutotech.everyone.service.CustomerService;
 import com.gutotech.everyone.service.SaleItemService;
@@ -45,7 +45,7 @@ public class CartController {
 	private CustomerService customerService;
 
 	@Autowired
-	private ClotheService clotheService;
+	private ProductService productService;
 
 	@Autowired
 	private SaleService saleService;
@@ -70,7 +70,7 @@ public class CartController {
 
 	@PostMapping("cart/add/{clotheId}")
 	public String addToCart(@PathVariable("clotheId") long clotheId, HttpServletRequest request) {
-		Clothe clothe = clotheService.findById(clotheId);
+		Product product = productService.findById(clotheId);
 
 		if (SecurityContextHolder.getContext().getAuthentication() != null
 				&& SecurityContextHolder.getContext().getAuthentication().isAuthenticated()
@@ -78,7 +78,7 @@ public class CartController {
 			String email = SecurityContextHolder.getContext().getAuthentication().getName();
 			Customer customer = customerService.findByEmail(email);
 
-			CartItem item = new CartItem(customer.getCart(), clothe, 1);
+			CartItem item = new CartItem(customer.getCart(), product, 1);
 
 			cartItemService.save(item);
 		} else {

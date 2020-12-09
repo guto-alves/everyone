@@ -13,9 +13,9 @@ public class CartItem {
 	public CartItem() {
 	}
 
-	public CartItem(Cart cart, Clothe clothe, int quantity) {
+	public CartItem(Cart cart, Product product, int quantity) {
 		id.setCart(cart);
-		id.setClothe(clothe);
+		id.setProduct(product);
 		this.quantity = quantity;
 	}
 
@@ -27,12 +27,12 @@ public class CartItem {
 		this.id.setCart(cart);
 	}
 
-	public Clothe getClothe() {
-		return id.getClothe();
+	public Product getClothe() {
+		return id.getProduct();
 	}
 
-	public void setClothe(Clothe clothe) {
-		this.id.setClothe(clothe);
+	public void setClothe(Product product) {
+		this.id.setProduct(product);
 	}
 
 	public int getQuantity() {

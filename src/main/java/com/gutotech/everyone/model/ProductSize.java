@@ -9,29 +9,29 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-public class ClotheSize {
+public class ProductSize {
 	@EmbeddedId
-	private ClotheSizeId id = new ClotheSizeId();
+	private ProductSizeId id = new ProductSizeId();
 
 	@NotNull
 	private int quantity;
 
-	public ClotheSize() {
+	public ProductSize() {
 	}
 
-	public ClotheSize(Clothe clothe, Size size, int quantity) {
-		id.setClothe(clothe);
+	public ProductSize(Product product, Size size, int quantity) {
+		id.setProduct(product);
 		id.setSize(size);
 		this.quantity = quantity;
 	}
 
 	@JsonIgnore
-	public Clothe getClothe() {
-		return id.getClothe();
+	public Product getProduct() {
+		return id.getProduct();
 	}
 
-	public void setClothe(Clothe clothe) {
-		id.setClothe(clothe);
+	public void setProduct(Product product) {
+		id.setProduct(product);
 	}
 
 	@JsonIgnore
@@ -61,10 +61,10 @@ public class ClotheSize {
 		if (this == obj) {
 			return true;
 		}
-		if (!(obj instanceof ClotheSize)) {
+		if (!(obj instanceof ProductSize)) {
 			return false;
 		}
-		ClotheSize other = (ClotheSize) obj;
+		ProductSize other = (ProductSize) obj;
 		return Objects.equals(id, other.id) && quantity == other.quantity;
 	}
 

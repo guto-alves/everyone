@@ -13,7 +13,7 @@ public class SaleItemId implements Serializable {
 	private Sale sale;
 
 	@ManyToOne
-	private Clothe clothe;
+	private Product product;
 
 	public Sale getSale() {
 		return sale;
@@ -23,19 +23,19 @@ public class SaleItemId implements Serializable {
 		this.sale = sale;
 	}
 
-	public Clothe getClothe() {
-		return clothe;
+	public Product getProduct() {
+		return product;
 	}
 
-	public void setClothe(Clothe clothe) {
-		this.clothe = clothe;
+	public void setProduct(Product product) {
+		this.product = product;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((clothe == null) ? 0 : clothe.hashCode());
+		result = prime * result + ((product == null) ? 0 : product.hashCode());
 		result = prime * result + ((sale == null) ? 0 : sale.hashCode());
 		return result;
 	}
@@ -49,10 +49,10 @@ public class SaleItemId implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		SaleItemId other = (SaleItemId) obj;
-		if (clothe == null) {
-			if (other.clothe != null)
+		if (product == null) {
+			if (other.product != null)
 				return false;
-		} else if (!clothe.equals(other.clothe))
+		} else if (!product.equals(other.product))
 			return false;
 		if (sale == null) {
 			if (other.sale != null)

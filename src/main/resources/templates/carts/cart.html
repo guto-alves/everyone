@@ -5,10 +5,9 @@
 
 		<div class="col text-center mt-3" th:if="${#sets.isEmpty(cart.items)}">
 			<h3 class="font-weight-bold">Shopping Cart</h3>
-
 			<span class="text-center">
 				Your cart is empty. Keep shopping to
-				<a href="#" th:href="@{/clothes}">find an item!</a>
+				<a href="#" th:href="@{/clothes}" class="font-weight-bold h5">find an item!</a>
 			</span>
 		</div>
 

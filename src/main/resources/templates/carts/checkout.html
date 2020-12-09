@@ -30,7 +30,7 @@
 						<div class="form-group" th:if="${!#lists.isEmpty(cards)}">
 							<label for="cardSelect" class="font-weight-bold d-block">Your Cards</label>
 							<select id="cardSelect" class="custom-select" style="width: 300px;" th:field="*{selectedCard}">
-								<option th:each="card : ${cards}" th:value="${card.id}" th:text="${#strings.substring(card.number, 12,15)}">****
+								<option th:each="card : ${cards}" th:value="${card.id}" th:text="${'****' + #strings.substring(card.number, 12,16)}">****
 									**** **** 3800 | EXP: 08/28</option>
 							</select>
 						</div>
@@ -64,7 +64,7 @@
 									<div class="col">
 										<div class="form-group">
 											<label for="monthSelect">MM</label>
-											<select class="custom-select" id="monthSelect" th:field="*{month}" required="required">
+											<select class="custom-select" id="monthSelect" th:field="*{month}">
 												<option value="" selected>MM</option>
 												<option th:each="month : ${#numbers.sequence(1, 12, 1)}"
 													th:value="${#numbers.formatInteger(month, 2, 'POINT')}"
@@ -76,7 +76,7 @@
 									<div class="col mr-3">
 										<div class="form-group">
 											<label for="yearSelect">YYYY</label>
-											<select class="custom-select" id=yearSelect th:field="*{year}" required>
+											<select class="custom-select" id=yearSelect th:field="*{year}">
 												<option value="" selected>YYYY</option>
 												<option th:each="year : ${#numbers.sequence(2020, 2040, 1)}" th:value="${year}" th:text="${year}"></option>
 											</select>
@@ -109,9 +109,9 @@
 					<div class="card shadow-lg">
 						<div class="card-body">
 							<label class="text-muted">Original price</label>
-							<h4 th:text="${'$' + #aggregates.sum(cart.items.![clothe.price * quantity])}">$ 165,99</h4>
+							<h4 th:text="${'$' + #numbers.formatDecimal(#aggregates.sum(cart.items.![clothe.price * quantity]), 2, 2, 'POINT')}">$ 165,99</h4>
 
-							<label class="text-muted"> Discounts</label>
+							<label class="text-muted">Discounts</label>
 							<h4>- $0,00</h4>
 
 							<hr>
@@ -121,7 +121,7 @@
 									<h4 class="font-weight-bold">Total</h4>
 								</div>
 								<div class="col text-right">
-									<h3 class="font-weight-bold" th:text="${'$' + #aggregates.sum(cart.items.![clothe.price * quantity])}">$
+									<h3 class="font-weight-bold" th:text="${'$' + #numbers.formatDecimal(#aggregates.sum(cart.items.![clothe.price * quantity]), 2, 2, 'POINT')}">$
 										100,00</h3>
 								</div>
 							</div>

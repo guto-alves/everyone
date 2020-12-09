@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.gutotech.everyone.model.Clothe;
+import com.gutotech.everyone.model.Product;
 import com.gutotech.everyone.model.Review;
 import com.gutotech.everyone.repository.ReviewRepository;
 
@@ -19,7 +19,7 @@ public class ReviewService {
 		repository.save(review);
 	}
 
-	public List<Review> findAllByClothe(Clothe clothe) {
-		return repository.findByClotheOrderByIdDesc(clothe);
+	public List<Review> findAllByClothe(Product product) {
+		return repository.findByProductOrderByIdDesc(product);
 	}
 }

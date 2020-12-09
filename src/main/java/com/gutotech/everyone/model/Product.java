@@ -20,7 +20,7 @@ import org.hibernate.validator.constraints.URL;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-public class Clothe {
+public class Product {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
@@ -29,7 +29,7 @@ public class Clothe {
 	@Column(nullable = false)
 	private String name;
 
-	@Column(length = 500)
+	@Column(length = 2500)
 	private String description;
 
 	@NotNull
@@ -52,17 +52,17 @@ public class Clothe {
 	@ManyToOne
 	private Brand brand;
 
-	@OneToMany(mappedBy = "id.clothe")
-	private Set<ClotheSize> sizes = new HashSet<>();
+	@OneToMany(mappedBy = "id.product")
+	private Set<ProductSize> sizes = new HashSet<>();
 
 	@JsonIgnore
-	@OneToMany(mappedBy = "clothe")
+	@OneToMany(mappedBy = "product")
 	private List<Review> review = new ArrayList<>();
 
-	public Clothe() {
+	public Product() {
 	}
 
-	public Clothe(String name, String description, double price, int discount, int stock, String imageUrl,
+	public Product(String name, String description, double price, int discount, int stock, String imageUrl,
 			Category category, Color color, Brand brand) {
 		this.name = name;
 		this.description = description;
@@ -75,7 +75,7 @@ public class Clothe {
 		this.brand = brand;
 	}
 
-	public Clothe(long id, String name, String description, double price, Color color, int stock, Brand brand,
+	public Product(long id, String name, String description, double price, Color color, int stock, Brand brand,
 			Category category, List<Review> review) {
 		this.id = id;
 		this.name = name;
@@ -152,6 +152,14 @@ public class Clothe {
 		this.brand = brand;
 	}
 
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
+
 	public Category getCategory() {
 		return category;
 	}
@@ -160,20 +168,12 @@ public class Clothe {
 		this.category = category;
 	}
 
-	public List<Review> getReviews() {
-		return review;
-	}
-
-	public Set<ClotheSize> getSizes() {
+	public Set<ProductSize> getSizes() {
 		return sizes;
 	}
 
-	public String getImageUrl() {
-		return imageUrl;
-	}
-
-	public void setImageUrl(String imageUrl) {
-		this.imageUrl = imageUrl;
+	public List<Review> getReviews() {
+		return review;
 	}
 
 	@Override
@@ -192,7 +192,7 @@ public class Clothe {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Clothe other = (Clothe) obj;
+		Product other = (Product) obj;
 		if (id != other.id)
 			return false;
 		return true;

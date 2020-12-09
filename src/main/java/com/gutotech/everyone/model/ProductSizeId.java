@@ -6,21 +6,21 @@ import javax.persistence.Embeddable;
 import javax.persistence.ManyToOne;
 
 @Embeddable
-public class ClotheSizeId implements Serializable {
+public class ProductSizeId implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@ManyToOne
-	private Clothe clothe;
+	private Product product;
 
 	@ManyToOne
 	private Size size;
 
-	public Clothe getClothe() {
-		return clothe;
+	public Product getProduct() {
+		return product;
 	}
 
-	public void setClothe(Clothe clothe) {
-		this.clothe = clothe;
+	public void setProduct(Product product) {
+		this.product = product;
 	}
 
 	public Size getSize() {
@@ -35,7 +35,7 @@ public class ClotheSizeId implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((clothe == null) ? 0 : clothe.hashCode());
+		result = prime * result + ((product == null) ? 0 : product.hashCode());
 		result = prime * result + ((size == null) ? 0 : size.hashCode());
 		return result;
 	}
@@ -48,11 +48,11 @@ public class ClotheSizeId implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		ClotheSizeId other = (ClotheSizeId) obj;
-		if (clothe == null) {
-			if (other.clothe != null)
+		ProductSizeId other = (ProductSizeId) obj;
+		if (product == null) {
+			if (other.product != null)
 				return false;
-		} else if (!clothe.equals(other.clothe))
+		} else if (!product.equals(other.product))
 			return false;
 		if (size == null) {
 			if (other.size != null)

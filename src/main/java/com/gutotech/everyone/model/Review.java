@@ -33,7 +33,7 @@ public class Review {
 
 	@JsonIgnore
 	@ManyToOne
-	private Clothe clothe;
+	private Product product;
 
 	@ManyToOne
 	private Customer customer;
@@ -41,11 +41,11 @@ public class Review {
 	public Review() {
 	}
 
-	public Review(int stars, String comment, Date date, Clothe clothe, Customer customer) {
+	public Review(int stars, String comment, Date date, Product product, Customer customer) {
 		this.stars = stars;
 		this.comment = comment;
 		this.date = date;
-		this.clothe = clothe;
+		this.product = product;
 		this.customer = customer;
 	}
 
@@ -81,12 +81,12 @@ public class Review {
 		this.date = date;
 	}
 
-	public Clothe getClothe() {
-		return clothe;
+	public Product getProduct() {
+		return product;
 	}
 
-	public void setClothe(Clothe clothe) {
-		this.clothe = clothe;
+	public void setProduct(Product product) {
+		this.product = product;
 	}
 
 	public Customer getCustomer() {

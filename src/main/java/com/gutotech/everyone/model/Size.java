@@ -22,7 +22,7 @@ public class Size {
 	public Size() {
 	}
 
-	public Size(long id, @NotBlank String name) {
+	public Size(long id, String name) {
 		this.id = id;
 		this.name = name;
 	}
