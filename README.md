@@ -1,4 +1,4 @@
-# Everyone Application
+# Everyone
 Everyone is a clothing store website built for the semiannual work of the discipline Software Engineering Laboratory at [FATEC ZL](http://www.fateczl.edu.br/).
 
 ## Running petclinic locally
@@ -21,7 +21,7 @@ Or you can run it from Maven directly using the Spring Boot Maven plugin. If you
 ./mvnw spring-boot:run
 ```
 
-### Login with Admin Role
+### Login as Everyone Admin
 Email: admin@everyone.com 
 
 Password: 123
