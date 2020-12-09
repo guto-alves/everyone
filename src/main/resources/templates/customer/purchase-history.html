@@ -19,8 +19,8 @@
 				<tr th:each="sale : ${sales}">
 					<td th:text="${#sets.size(sale.items) + ' Clothes purchased'}">
 					<td th:text="${sale.date}"></td>
-					<td th:text="${sale.price}"></td>
-					<td th:text="${sale.card == null} ? 'Bank Slip' + 'Credit Card'"></td>
+					<td th:text="${#aggregates.sum(sale.items.![price * quantity])}"></td>
+					<td th:text="${sale.cardNumber == null ? 'Bank Slip' : 'MasterCard ****' + #strings.substring(sale.cardNumber, 12, 16)}"></td>
 				</tr>
 			</tbody>
 		</table>

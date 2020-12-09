@@ -2,6 +2,7 @@ package com.gutotech.everyone.controller;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,26 +18,25 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.gutotech.everyone.model.Cart;
 import com.gutotech.everyone.model.CartItem;
 import com.gutotech.everyone.model.Clothe;
 import com.gutotech.everyone.model.CreditCard;
 import com.gutotech.everyone.model.Customer;
+import com.gutotech.everyone.model.PaymentFormDto;
 import com.gutotech.everyone.model.Sale;
 import com.gutotech.everyone.model.SaleItem;
 import com.gutotech.everyone.service.CartItemService;
-import com.gutotech.everyone.service.CartService;
 import com.gutotech.everyone.service.ClotheService;
+import com.gutotech.everyone.service.CreditCardService;
 import com.gutotech.everyone.service.CustomerService;
 import com.gutotech.everyone.service.SaleItemService;
 import com.gutotech.everyone.service.SaleService;
 
 @Controller
 public class CartController {
-
-	@Autowired
-	private CartService cartService;
 
 	@Autowired
 	private CartItemService cartItemService;
@@ -53,6 +53,9 @@ public class CartController {
 	@Autowired
 	private SaleItemService saleItemService;
 
+	@Autowired
+	private CreditCardService creditCardService;
+
 	@ModelAttribute("cart")
 	public Cart getCart() {
 		Customer customer = customerService
@@ -61,15 +64,12 @@ public class CartController {
 	}
 
 	@GetMapping("cart")
-	public String showCart(Model model) {
-//		model.addAttribute("customer", attributeValue)
+	public String showCart() {
 		return "carts/cart";
 	}
 
 	@PostMapping("cart/add/{clotheId}")
 	public String addToCart(@PathVariable("clotheId") long clotheId, HttpServletRequest request) {
-		System.out.println("TAG: " + clotheId);
-		
 		Clothe clothe = clotheService.findById(clotheId);
 
 		if (SecurityContextHolder.getContext().getAuthentication() != null
@@ -79,7 +79,7 @@ public class CartController {
 			Customer customer = customerService.findByEmail(email);
 
 			CartItem item = new CartItem(customer.getCart(), clothe, 1);
-			
+
 			cartItemService.save(item);
 		} else {
 			String referrer = request.getHeader("Referer");
@@ -91,58 +91,84 @@ public class CartController {
 	}
 
 	@PostMapping("cart/remove/{clotheId}")
-	public String remove(@PathVariable("clotheId") Long clotheId, Model model) {
-		Customer customer = customerService
-				.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+	public String remove(@PathVariable("clotheId") Long clotheId, @ModelAttribute("cart") Cart cart, Model model) {
+		CartItem cartItem = cart.getItems()
+				.stream()
+				.filter(item -> item.getClothe().getId() == clotheId)
+				.findFirst()
+				.get();
 
-		customer.getCart().getItems().removeIf(item -> item.getClothe().getId() == clotheId);
-		
-		cartService.save(customer.getCart());
-
-		customerService.save(customer);
+		cartItemService.delete(cartItem);
 
 		return "redirect:/cart/";
 	}
 
 	@ResponseBody
-	@PostMapping("cart/update-quantity")
-	public String updateQuantity(@RequestParam("clotheid") long clotheId, @RequestParam("newquantity") int quantity) {
-		Customer customer = customerService
-				.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+	@PostMapping("cart/update")
+	public Map<String, String> updateQuantity(@RequestParam("clotheid") long clotheId,
+			@RequestParam("quantity") int newQuantity, @ModelAttribute("cart") Cart cart, Model model) {
 
-		CartItem item = customer.getCart().getItems().stream().filter(i -> i.getClothe().getId() == clotheId)
-				.findFirst().get();
+		CartItem item = cart.getItems()
+				.stream()
+				.filter(i -> i.getClothe().getId() == clotheId)
+				.findFirst()
+				.get();
 
-		item.setQuantity(quantity);
+		item.setQuantity(newQuantity);
+		cartItemService.save(item);
 
-		customer.getCart().getItems().remove(item);
-		customer.getCart().getItems().add(item);
+		cart.getItems().remove(item);
+		cart.getItems().add(item);
 
-		customerService.save(customer);
+		double total = cart.getItems()
+				.stream()
+				.mapToDouble(item1 -> item1.getQuantity() * item1.getClothe().getPrice())
+				.sum();
 
 		double newItemPrice = item.getQuantity() * item.getClothe().getPrice();
 
-		double total = customer.getCart().getItems().stream()
-				.mapToDouble(item1 -> item1.getQuantity() * item1.getClothe().getPrice()).sum();
-
-		return String.format("%.2f%n%.2f", newItemPrice, total);
+		return Map.of("total", String.format("%.2f", total), "newItemPrice", String.format("%.2f", newItemPrice));
 	}
 
 	@GetMapping("cart/checkout")
 	public String showCheckoutPage(Model model) {
 		Customer customer = customerService
 				.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
-		model.addAttribute("cards", customer.getCards());
-		model.addAttribute("creditCardt", new CreditCard());
+
+		model.addAttribute("cards", creditCardService.findAllByCustomer(customer));
+		model.addAttribute("form", new PaymentFormDto());
+		model.addAttribute("newCard", new CreditCard());
+
 		return "/carts/checkout";
 	}
 
 	@PostMapping("cart/checkout")
-	public String processCheckout(Cart cart, CreditCard creditCard, Model model) {
+	public String processCheckout(Cart cart, PaymentFormDto form, CreditCard newCard, RedirectAttributes attributes,
+			Model model) {
 		Customer customer = customerService
 				.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
 
+		CreditCard paymentCard = null;
+
+		if (form.getMethod().equals("card")) {
+			if (form.getSelectedCard().getNumber() != null) {
+				paymentCard = form.getSelectedCard();
+			} else {
+				if (form.isRememberCard()) {
+					newCard.setCustomer(customer);
+					creditCardService.save(newCard);
+				}
+
+				paymentCard = newCard;
+			}
+		}
+
 		Sale sale = new Sale(new Date(), "Paid", customer);
+
+		if (paymentCard != null) {
+			sale.setCreditCard(paymentCard);
+		}
+
 		saleService.save(sale);
 
 		List<SaleItem> saleItems = cart.getItems().stream()
@@ -151,6 +177,11 @@ public class CartController {
 				.collect(Collectors.toList());
 
 		saleItemService.saveAll(saleItems);
+
+		cartItemService.deleteAll(cart.getItems());
+
+		attributes.addFlashAttribute("message",
+				"Purchase successful. To see more details, visit the Purchase History.");
 
 		return "redirect:/";
 	}

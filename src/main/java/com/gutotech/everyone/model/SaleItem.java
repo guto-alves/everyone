@@ -14,12 +14,12 @@ public class SaleItem {
 
 	private double price;
 
-	private double discount;
+	private int discount;
 
 	public SaleItem() {
 	}
 
-	public SaleItem(Sale sale, Clothe clothe, int quantity, double price, double discount) {
+	public SaleItem(Sale sale, Clothe clothe, int quantity, double price, int discount) {
 		id.setSale(sale);
 		id.setClothe(clothe);
 		this.quantity = quantity;
@@ -68,7 +68,7 @@ public class SaleItem {
 		return discount;
 	}
 
-	public void setDiscount(double discount) {
+	public void setDiscount(int discount) {
 		this.discount = discount;
 	}
 

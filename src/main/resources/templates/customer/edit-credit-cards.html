@@ -24,15 +24,19 @@
 		</form>
 
 		<hr>
-		
+
 		<!-- Saved Cards List -->
-		<div class="row df db-sm mb-3" style="border-bottom-style: dotted; border-bottom-width: thin;">
-			<div class="fx pb5">
-				<img alt="" src="../static/images/mastercard-icon.jpg" th:src="@{/images/mastercard-icon.jpg}">
-				<label class="title ellipsis">**** **** **** <b>3800</b> | EXP: <b>08/28</b></label>
-			</div>
-			<div class="col text-right">
-				<a href="#" class="btn btn-sm btn-danger">Delete</a>
+		<div th:if="${!#lists.isEmpty(cards)}">
+			<div class="row df db-sm mb-3" style="border-bottom-style: dotted; border-bottom-width: thin;"
+				th:each="card : ${cards}">
+				<div class="fx pb5">
+					<img alt="" src="../static/images/mastercard-icon.jpg" th:src="@{/images/mastercard-icon.jpg}">
+					<label class="title ellipsis">**** **** **** <b th:text="${#strings.substring(card.number, 12, 16)}">3800</b> | EXP: <b
+						th:text="${card.month + '/' + #strings.substring(card.year, 2, 4)}">08/28</b></label>
+				</div>
+				<div class="col text-right">
+					<a href="#" class="btn btn-sm btn-danger">Delete</a>
+				</div>
 			</div>
 		</div>
 	</div>

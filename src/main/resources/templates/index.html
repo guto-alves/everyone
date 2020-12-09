@@ -2,8 +2,12 @@
 <html xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="https://thymeleaf.org"
 	th:replace="~{fragments/layout :: base('Everyone', ~{::body})}">
 <body>
-
 	<div class="container-fluid col-md-8">
+		<div class="alert alert-success mt-3" th:if="${message != null}">
+			<button type="button" class="close" data-dismiss="alert">&times;</button>
+			<span th:text="${message}">Your changes have been successfully saved.</span>
+		</div>
+		
 		<div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
 			<div class="carousel-inner">
 				<div class="carousel-item active">

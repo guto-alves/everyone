@@ -8,14 +8,14 @@
 				<div class="card-body">
 					<h4 class="card-title">Register new brand</h4>
 
-					<form action="#" method="post" th:action="@{/brand/new}" th:object="${brand}">
+					<form action="#" method="post" th:action="@{/brands}" th:object="${brand}">
 						<div class="form-group">
 							<input type="text" id="brandNameInput" class="form-control" placeholder="Name" th:field="*{name}">
 
 							<span class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</span>
 						</div>
 
-						<button type="submit" class="btn btn-primary form-control">Register</button>
+						<button type="submit" class="btn btn-primary form-control">Add</button>
 					</form>
 				</div>
 			</div>
@@ -30,8 +30,12 @@
 		<div class="col-md-6">
 			<h3>Brands</h3>
 
+			<div class="form-group">
+				<input type="text" id="filterInput" class="form-control" onkeyup="filter()" placeholder="Search brand">
+			</div>
+
 			<div class="table-scroll text-center">
-				<table class="table table-sm table-striped table-bordered table-hover">
+				<table id="table" class="table table-sm table-striped table-bordered table-hover">
 					<thead class="thead-dark">
 						<tr>
 							<th>Name</th>
@@ -43,7 +47,7 @@
 						<tr th:each="brand : ${brands}">
 							<td class="align-middle" th:text="${brand.name}"></td>
 							<td class="align-middle">
-								<form action="#" method="post" th:action="@{/brand/remove(brandId=${brand.id})}">
+								<form action="#" method="post" th:action="@{/brands/remove(id=${brand.id})}">
 									<button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
 								</form>
 							</td>
@@ -53,5 +57,28 @@
 			</div>
 		</div>
 	</div>
+
+	<script type="text/javascript">
+		function filter() {
+			var input = document.getElementById("filterInput");
+			var filter = input.value.toUpperCase();
+			var table = document.getElementById("table");
+			var tr = table.getElementsByTagName("tr");
+
+			for (i = 0; i < tr.length; i++) {
+				var td = tr[i].getElementsByTagName("td")[0];
+
+				if (td) {
+					var txtValue = td.textContent || td.innerText;
+
+					if (txtValue.toUpperCase().indexOf(filter) > -1) {
+						tr[i].style.display = "";
+					} else {
+						tr[i].style.display = "none";
+					}
+				}
+			}
+		}
+	</script>
 </body>
 </html>

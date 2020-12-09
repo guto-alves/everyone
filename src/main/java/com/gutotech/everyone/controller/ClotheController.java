@@ -1,11 +1,14 @@
 package com.gutotech.everyone.controller;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -21,11 +24,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.gutotech.everyone.model.Clothe;
 import com.gutotech.everyone.model.Customer;
+import com.gutotech.everyone.model.Review;
 import com.gutotech.everyone.service.BrandService;
 import com.gutotech.everyone.service.CategoryService;
 import com.gutotech.everyone.service.ClotheService;
 import com.gutotech.everyone.service.ColorService;
 import com.gutotech.everyone.service.CustomerService;
+import com.gutotech.everyone.service.ReviewService;
 
 @Controller
 @RequestMapping("clothes")
@@ -45,6 +50,9 @@ public class ClotheController {
 
 	@Autowired
 	private CustomerService customerService;
+
+	@Autowired
+	private ReviewService reviewService;
 
 	@ModelAttribute("categories")
 	public List<String> findAllCategories() {
@@ -71,19 +79,23 @@ public class ClotheController {
 		return "clothes/clothes";
 	}
 
-	@GetMapping("sort")
-	public String sortClothesBy(@RequestParam(name = "color", required = false) List<String> colors,
+	@GetMapping("filter")
+	public String sortClothesBy(@RequestParam(name = "gender", required = false) List<String> genders,
+			@RequestParam(name = "category", required = false) Set<String> categories,
+			@RequestParam(name = "color", required = false) List<String> colors,
 			@RequestParam(name = "brand", required = false) List<String> brands,
 			@RequestParam(name = "price", required = false, defaultValue = "0") int price, Model model) {
-		// filter clothes
+
 		List<Clothe> clothes = findAllClothes().stream()
+				.filter(clothe -> genders == null || genders.contains(clothe.getCategory().getGender().getName()))
+				.filter(clothe -> categories == null || categories.contains(clothe.getCategory().getName()))
 				.filter(clothe -> colors == null || colors.contains(clothe.getColor().getName()))
 				.filter(clothe -> brands == null || brands.contains(clothe.getBrand().getName()))
-				.filter(clothe -> price == 0 || clothe.getPrice() < price).collect(Collectors.toList());
+				.filter(clothe -> price == 0 || clothe.getPrice() <= price).collect(Collectors.toList());
 
-		// add matches clothes to the model
 		model.addAttribute("clothes", clothes);
-
+		model.addAttribute("filterGenders", genders);
+		model.addAttribute("filterCategories", categories);
 		model.addAttribute("filterColors", colors);
 		model.addAttribute("filterBrands", brands);
 		model.addAttribute("filterPrice", price);
@@ -107,6 +119,7 @@ public class ClotheController {
 		}
 
 		model.addAttribute("clothe", clothe);
+		model.addAttribute("reviews", reviewService.findAllByClothe(clothe));
 
 		return "clothes/clothe_details";
 	}
@@ -132,5 +145,48 @@ public class ClotheController {
 		redirectAttributes.addFlashAttribute("message", "Clothing successfully added!");
 
 		return "redirect:/clothes/new";
+	}
+
+	@GetMapping("edit/{clotheId}")
+	public String initUpdateClotheForm(@PathVariable("clotheId") long clotheId, Model model) {
+		Clothe clothe = clotheService.findById(clotheId);
+
+		model.addAttribute("colors", colorService.findAll());
+		model.addAttribute("brands", brandService.findAll());
+		model.addAttribute("clothe", clothe);
+		return "clothes/clothe-form";
+	}
+
+	@PostMapping("edit/{clotheId}")
+	public String proccessUpdateForm(@Valid Clothe clothe, RedirectAttributes redirectAttributes, BindingResult result,
+			Model model) {
+		model.addAttribute(clothe);
+
+		if (result.hasErrors()) {
+			return "clothes/clothes-form";
+		}
+
+		clotheService.save(clothe);
+
+		redirectAttributes.addFlashAttribute("message", "Clothing successfully updated!");
+
+		return "redirect:/clothes/edit/{clotheId}";
+	}
+
+	@PostMapping("review/{clotheId}")
+	public ResponseEntity<Void> saveReview(@PathVariable("clotheId") long clotheId, @RequestParam("stars") int stars,
+			@RequestParam("comment") String comment) {
+		String email = SecurityContextHolder.getContext().getAuthentication().getName();
+		Customer customer = customerService.findByEmail(email);
+		
+		Clothe clothe = clotheService.findById(clotheId);
+		
+		Review review = new Review(stars, comment, new Date(), clothe, customer);
+		System.out.println("TEST CUSTOMER: " + customer.getEmail());
+		System.out.println("TEST CUSTOMER: " + review.getCustomer());
+		
+		reviewService.save(review);
+		
+		return ResponseEntity.ok().build();
 	}
 }

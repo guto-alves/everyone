@@ -1,14 +1,18 @@
 <!DOCTYPE html>
 <html xmlns:th="https://www.thymeleaf.org" th:replace="~{fragments/layout :: base ('Clothe', ~{::body})}">
 <body>
-	<div class="container-fluid col-md-4 mt-3 mb-3">
+	<div class="container-fluid col-md-6 mt-3 mb-3">
 		<div class="card">
 			<div class="card-body">
-				<h4 class="card-title">Register Clothe</h4>
+				<h4 class="card-title">Clothe Info</h4>
 
-				<div th:if="${message != null}" class="alert- alert-success" th:text="${message}" role="alert"></div>
+				<div th:if="${message != null}" class="alert alert-success" th:text="${message}" role="alert">
+					<button type="button" class="close" data-dismiss="alert">&times;</button>
+				</div>
 
-				<form action="#" method="post" th:action="@{/clothes/new}" th:object="${clothe}">
+				<form action="#" method="post" th:object="${clothe}">
+					<input type="hidden" th:field="*{id}">
+
 					<div class="form-group">
 						<label for="nameInput">Name</label>
 						<input type="text" id="nameInput" class="form-control" placeholder="Name" th:field="*{name}">
@@ -28,13 +32,14 @@
 						</div>
 
 						<div class="form-group col-md-4">
-							<label for="discountInput">Discount</label>
-							<input type="range" id="discountInput" class="form-control-range" placeholder="Discount" min="0" max="99"
+							<label id="discountLabel" for="discountInput"
+								th:text="${clothe.discount == 0 ? 'No Discount' : 'Discount: ' + clothe.discount + '%'}">No Discount</label>
+							<input type="range" id="discountInput" class="form-control-range mt-2" placeholder="Discount" min="0" max="95"
 								step="1" th:field="*{discount}">
 						</div>
 
 						<div class="form-group col-md-4">
-							<label for="stockInput">Stock</label>
+							<label for="stockInput">Quantity</label>
 							<input type="number" id="stockInput" class="form-control" placeholder="Quantity in stock" min="1"
 								th:field="*{stock}">
 						</div>
@@ -43,7 +48,6 @@
 					<div class="form-row">
 						<div class="form-group col-md-6">
 							<label for="colorSelect">Color</label>
-
 							<select class="form-control" th:field="*{color}" id="colorSelect">
 								<option th:each="c : ${colors}" th:value="${c.id}" th:text="${c.name}"></option>
 							</select>
@@ -51,7 +55,6 @@
 
 						<div class="form-group col-md-6">
 							<label for="brandSelect">Brand</label>
-
 							<select id="brandSelect" class="form-control" th:field="*{brand}">
 								<option th:each="b : ${brands}" th:value="${b.id}" th:text="${b.name}">Brand Name</option>
 							</select>
@@ -59,21 +62,66 @@
 					</div>
 
 					<div class="form-group">
-						<label for="urlInput">Image URL</label>
-
-						<input type="url" id="urlInput" class="form-control" th:field="*{imageUrl}">
+						<label for="genderSelect">Gender</label>
+						<select id="genderSelect" class="custom-select">
+							<option th:each="gender : ${T(com.gutotech.everyone.model.Gender).values()}" th:value="${gender.name()}"
+								th:selected="${clothe.category != null && clothe.category.gender.name() == gender.name()}"
+								th:text="${gender.name}"></option>
+						</select>
 					</div>
 
-					<button type="submit" class="btn btn-primary form-control">Add</button>
+					<div class="form-group">
+						<label for="categorySelect">Category</label>
+						<select id="categorySelect" class="custom-select" name="category" required="required">
+						</select>
+					</div>
+
+					<div class="form-group">
+						<label for="urlInput">Image URL</label>
+						<input type="url" id="urlInput" class="form-control" th:field="*{imageUrl}" maxlength="255">
+					</div>
+
+					<button type="submit" class="btn btn-primary form-control"
+						th:text="${clothe.name == null || clothe.name == '' ? 'Add' : 'Update'}">Add</button>
 				</form>
 			</div>
 		</div>
 	</div>
-	
-	<script type="text/javascript">
-		$("#discountInput").on("change", function() {
-			alert("Discount = " + $("#discountInput").val() + "%");
+
+	<script type="text/javascript" th:inline="javascript">
+		$("#discountInput").on("input change", function() {
+			var discount = $(this).val();
+
+			if (discount === "0") {
+				$("#discountLabel").text("No Discount");
+			} else {
+				$("#discountLabel").text("Discount: " + discount + "%");
+			}
 		});
+		
+		var selectedCategory = /*[[${clothe.category}]]*/null;
+		
+		$(document).ready(function () {
+			var gender = $("#genderSelect option:selected").val();
+			changeCategories(gender);	
+		});
+		
+		$("#genderSelect").change(function() {
+			var gender = $("#genderSelect option:selected").val();
+			changeCategories(gender);
+		});
+		
+		function changeCategories(gender) {
+			$.get("/categories/api", { gender : gender }, function(data) {
+				$("#categorySelect").empty();
+				
+				data.forEach(category => {
+					var selected = selectedCategory != null && selectedCategory.name === category.name ? 'selected' : '';
+					var option = '<option value="' + category.id + '" ' + selected +'> '+ category.name + '</option>';
+					$("#categorySelect").append(option);
+				});
+			});
+		}
 	</script>
 </body>
 </html>

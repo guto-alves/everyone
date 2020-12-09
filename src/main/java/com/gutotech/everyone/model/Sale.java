@@ -7,6 +7,7 @@ import java.util.Set;
 
 import javax.persistence.Basic;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -30,13 +31,12 @@ public class Sale {
 
 	private String status;
 
+	private String cardNumber;
+
 	@ManyToOne
 	private Customer customer;
 
-	@ManyToOne
-	private CreditCard card;
-
-	@OneToMany(mappedBy = "id.sale")
+	@OneToMany(mappedBy = "id.sale", fetch = FetchType.EAGER)
 	private Set<SaleItem> items = new HashSet<>();
 
 	public Sale() {
@@ -55,10 +55,12 @@ public class Sale {
 		this.customer = customer;
 	}
 
+	public void setCreditCard(CreditCard card) {
+		cardNumber = card.getNumber();
+	}
+
 	public double getTotal() {
-		return items.stream()
-					.mapToDouble(SaleItem::getSubTotal)
-					.sum();
+		return items.stream().mapToDouble(SaleItem::getSubTotal).sum();
 	}
 
 	public Long getId() {
@@ -85,20 +87,20 @@ public class Sale {
 		this.status = status;
 	}
 
+	public String getCardNumber() {
+		return cardNumber;
+	}
+
+	public void setCardNumber(String cardNumber) {
+		this.cardNumber = cardNumber;
+	}
+
 	public Customer getCustomer() {
 		return customer;
 	}
 
 	public void setCustomer(Customer customer) {
 		this.customer = customer;
-	}
-
-	public CreditCard getCard() {
-		return card;
-	}
-
-	public void setCard(CreditCard card) {
-		this.card = card;
 	}
 
 	public Set<SaleItem> getItems() {

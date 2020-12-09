@@ -5,10 +5,40 @@
 
 		<!-- Filters in the left side-->
 		<aside class="col-md-3 blog-asize border-rounded">
-
-			<form id="filterForm" action="#" method="get" th:action="@{/clothes/sort}">
+			<form id="filterForm" action="#" method="get" th:action="@{/clothes/filter}">
 				<div class="form-group">
-					<button type="submit" class="btn btn-primary form-control">Filter</button>
+					<button type="submit" class="btn btn-sm btn-primary form-control">Apply filters</button>
+
+					<div class="row mt-2">
+						<div class="col-md-6">
+							<input type="reset" class="btn btn-sm btn-outline-secondary form-control" value="Reset">
+						</div>
+						<div class="col-md-6">
+							<a th:href="@{/clothes}" class="btn btn-sm btn-outline-secondary form-control">Clear filters</a>
+						</div>
+					</div>
+				</div>
+
+				<!-- Gender -->
+				<div class="accordion" id="genderAccordion">
+					<div class="card">
+						<div class="card-header" id="headingGender">
+							<h2 class="mb-0">
+								<button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
+									data-target="#collapseGender" aria-expanded="false" aria-controls="collapseGender">Gender</button>
+							</h2>
+						</div>
+						<div id="collapseGender" class="collapse show" aria-labelledby="headingGender" data-parent="#genderAccordion">
+							<div class="card-body">
+								<div class="form-check" th:each="gender : ${T(com.gutotech.everyone.model.Gender).values()}">
+									<input class="form-check-input" type="checkbox" id="genderCheckbox" name="gender" th:value="${gender}"
+										th:checked="${filterGenders != null && #lists.contains(filterGenders, gender.name)}">
+
+									<label class="form-check-label" for="categoryCheckbox" th:text="${gender.name}">Gender Name</label>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 
 				<!-- Category -->
@@ -20,17 +50,19 @@
 									data-target="#collapseCategory" aria-expanded="false" aria-controls="collapseCategory">Category</button>
 							</h2>
 						</div>
-						<div id="collapseCategory" class="collapse" aria-labelledby="headingCategory" data-parent="#categoryAccordion">
+						<div id="collapseCategory" class="collapse show" aria-labelledby="headingCategory"
+							data-parent="#categoryAccordion">
 							<div class="card-body">
-
 								<div class="input-group mb-3">
-									<input type="text" id="categoryFilter" onkeyup="filter()" class="form-control" placeholder="Search">
+									<input type="text" id="categoryFilter" onkeyup="filter('category')" class="form-control" placeholder="Search">
 								</div>
 
-								<div class="form-check" th:each="category : ${categories}">
-									<input class="form-check-input" type="checkbox" id="categoryCheckbox" name="color" th:value="${category}"
-										th:checked="${filterCategories != null && #lists.contains(filterCategories, category)}">
-									<label class="form-check-label" for="categoryCheckbox" th:text="${category}">Category Name</label>
+								<div id="categoryContainer" class="container-scroll">
+									<div class="form-check" th:each="category : ${categories}">
+										<input class="form-check-input" type="checkbox" id="categoryCheckbox" name="category" th:value="${category}"
+											th:checked="${filterCategories != null && #lists.contains(filterCategories, category)}">
+										<label class="form-check-label" for="categoryCheckbox" th:text="${category}">Category Name</label>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -48,15 +80,15 @@
 						</div>
 						<div id="collapseColor" class="collapse" aria-labelledby="headingColor" data-parent="#colorAccordion">
 							<div class="card-body">
-
 								<div class="input-group mb-3">
-									<input class="form-control" type="text" id="brandFilter" onkeyup="filter()" placeholder="Search">
+									<input class="form-control" type="text" id="colorFilter" onkeyup="filter('color')" placeholder="Search">
 								</div>
-
-								<div class="form-check" th:each="color : ${colors}">
-									<input class="form-check-input" type="checkbox" id="colorsCheckbox" name="color" th:value="${color}"
-										th:checked="${filterColors != null && #lists.contains(filterColors, color)}">
-									<label class="form-check-label" for="colorsCheckbox" th:text="${color}">Color Name</label>
+								<div id="colorContainer" class="container-scroll">
+									<div class="form-check" th:each="color : ${colors}">
+										<input class="form-check-input" type="checkbox" id="colorsCheckbox" name="color" th:value="${color}"
+											th:checked="${filterColors != null && #lists.contains(filterColors, color)}">
+										<label class="form-check-label" for="colorsCheckbox" th:text="${color}">Color Name</label>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -74,15 +106,15 @@
 						</div>
 						<div id="collapseBrand" class="collapse" aria-labelledby="headingBrand" data-parent="#brandAccordion">
 							<div class="card-body">
-
 								<div class="input-group mb-3">
-									<input class="form-control" type="text" id="brandFilter" onkeyup="filter()" placeholder="Search">
+									<input class="form-control" type="text" id="brandFilter" onkeyup="filter('brand')" placeholder="Search">
 								</div>
-
-								<div class="form-check" th:each="brand : ${brands}">
-									<input class="form-check-input" type="checkbox" id="brandCheckbox" name="brand" th:value="${brand}"
-										th:checked="${filterBrands != null && #lists.contains(filterBrands, brand)}">
-									<label class="form-check-label" for="brandCheckbox" th:text="${brand}">Brand Name</label>
+								<div id="brandContainer" class="container-scroll">
+									<div class="form-check" th:each="brand : ${brands}">
+										<input class="form-check-input" type="checkbox" id="brandCheckbox" name="brand" th:value="${brand}"
+											th:checked="${filterBrands != null && #lists.contains(filterBrands, brand)}">
+										<label class="form-check-label" for="brandCheckbox" th:text="${brand}">Brand Name</label>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -105,7 +137,7 @@
 										<span class="input-group-text">Under $</span>
 									</div>
 									<input type="number" class="form-control" id="priceInput" onkeyup="checkPrice()" onchange="checkPrice()"
-										name="price" th:value="${filterPrice?: ''}" min="0" step="10">
+										name="price" th:value="${filterPrice == null || filterPrice == '' ? '' : filterPrice}" min="0" step="10">
 									<div class="input-group-append">
 										<span class="input-group-text">.00</span>
 									</div>
@@ -123,27 +155,44 @@
 
 		<!-- Clothes  -->
 		<div class="col-sm-9 blog-main">
+			<span class="text-center" th:text="${#lists.size(clothes) + ' results'}"></span>
+			<!-- <div class="row justify-content-md-center">
+				<span class="col" th:text="${#lists.size(clothes) + ' results'}"></span>
 
+				<div class="col-auto">
+					<label>Sort by</label>
+					<select class="custom-select" style="width: 170px;">
+						<option>More Popular</option>
+						<option>Best Sellers</option>
+						mais vendidos 
+						<option>Top Rated</option>
+						melhor avaliados
+						<option>Lowest Price</option>
+						<option>Biggest Price</option>
+						<option>Biggest Discount</option>
+					</select>
+				</div>
+			</div> -->
+
+			<hr>
 			<div class="row">
 				<div class="col-md-4" th:each="clothe : ${clothes}">
-					<div class="card mb-4 shadow-lg">
+					<div class="card mb-4 shadow-lg" style="height: 400px;">
 						<a href="#" th:href="@{/clothes/details/{id}(id=${clothe.id}) }">
 							<img class="card-img-top" alt="Clothe image" th:src="${clothe.imageUrl}">
 						</a>
-
 						<div class="card-body" id="#outer">
-							<h5 class="card-title" th:text="${clothe.name} + ' - ' + ${clothe.id}">Name</h5>
-
+							<h5 class="card-title text-truncate" th:text="${clothe.name}">Name</h5>
 							<p class="card-text text-truncate" th:text="${clothe.description}">Description</p>
-
-							<h4 class="card-title" th:text="${clothe.price}">R$ 349,99</h4>
+							<h4 class="card-title" th:text="'$ ' + ${clothe.price}">R$ 349,99</h4>
 						</div>
 					</div>
 				</div>
 			</div>
-
 		</div>
 	</div>
+
+	<hr>
 
 	<nav aria-label="Page navigation">
 		<ul class="pagination justify-content-center">
@@ -166,6 +215,61 @@
 	</nav>
 
 	<script th:inline="javascript">
+		$(document).ready(function() {
+			var filterGenders = /*[[${filterGenders}]]*/null;
+			if (filterGenders != null) {
+				changeCategories(filterGenders);
+			}
+			
+			var filterPrice = /*[[${filterPrice}]]*/null;
+			toggleWarningPrice(filterPrice);
+	
+			$("#filterForm").submit(function(event) {
+				var price = $("#priceInput").val().trim();
+	
+				if (price === "0" || price === "") {
+					$("#priceInput").remove();
+				}
+			});
+		});
+		
+		$("input:checkbox[name='gender']").on("change", function() {
+			var genders = [];
+
+			$("input:checkbox[name=gender]:checked").each(function() {
+				genders.push($(this).val());
+			});
+
+			changeCategories(genders);
+		});
+		
+		var filterCategories = /*[[${filterCategories}]]*/ null;
+		if (filterCategories == null) {
+			filterCategories = [];
+		}
+		
+		function changeCategories(genders) {			
+			$.ajax({
+				url : "/categories/api",
+				data : {
+					gender : genders
+				},
+				traditional : true,
+				success : function(data) {
+					$("#categoryContainer").empty();
+					
+					data.forEach(category => {
+						var checked = filterCategories.includes(category.name) ? 'checked' : '';
+						
+						var checkbox = '<div class="form-check">';
+						checkbox +=	'<input class="form-check-input" type="checkbox" id="categoryCheckbox" name="category" value="'+ category.name +'" ' + checked + '>'; 
+						checkbox += '<label class="form-check-label" for="categoryCheckbox">' + category.name + '</label></div>';
+						$("#categoryContainer").append(checkbox);
+					});
+				}
+			});
+		}
+
 		function checkPrice() {
 			var price = $("#priceInput").val();
 			toggleWarningPrice(price);
@@ -179,18 +283,20 @@
 			}
 		}
 
-		$(document).ready(function() {
-			var filterPrice = /*[[${filterPrice}]]*/null;
-			toggleWarningPrice(filterPrice);
-
-			$("#filterForm").submit(function(event) {
-				var price = $("#priceInput").val();
-
-				if (price == "0" || price == "") {
-					$("#priceInput").remove();
+		function filter(who) {
+			var filter = $("#" + who + "Filter").val().toUpperCase();
+			
+			$("#" + who + "Container").children().each(function() {
+				var formCheck = $(this);
+				var text = formCheck.children(".form-check-label").first().text();
+				
+				if (text.toUpperCase().indexOf(filter) > -1) {
+					formCheck.show();
+				} else {
+					formCheck.hide();
 				}
 			});
-		});
+		}
 	</script>
 </body>
 </html>

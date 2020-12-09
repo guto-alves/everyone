@@ -10,12 +10,14 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.gutotech.everyone.error.InvalidOldPasswordException;
 import com.gutotech.everyone.model.Customer;
+import com.gutotech.everyone.service.CreditCardService;
 import com.gutotech.everyone.service.CustomerService;
 import com.gutotech.everyone.service.SaleService;
 
@@ -25,8 +27,11 @@ public class CustomerController {
 	private CustomerService service;
 
 	@Autowired
-	private SaleService saleService;;
-	
+	private SaleService saleService;
+
+	@Autowired
+	private CreditCardService creditCardService;
+
 	@ModelAttribute("customer")
 	public Customer getCustomer() {
 		return service.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
@@ -34,14 +39,6 @@ public class CustomerController {
 
 	@GetMapping("customer/edit-profile")
 	public String initUpdateProfileForm() {
-		/*
-		 * Customer customer =
-		 * service.findByEmail(SecurityContextHolder.getContext().getAuthentication().
-		 * getName());
-		 * 
-		 * model.addAttribute("customer", customer);
-		 */
-
 		return "customer/edit-profile";
 	}
 
@@ -81,7 +78,8 @@ public class CustomerController {
 	}
 
 	@GetMapping("customer/edit-credit-cards")
-	public String initCreditCardsPage() {
+	public String initCreditCardsPage(Customer customer, Model model) {
+		model.addAttribute("cards", creditCardService.findAllByCustomer(customer));
 		return "customer/edit-credit-cards";
 	}
 
@@ -94,11 +92,17 @@ public class CustomerController {
 		return "redirect:/customer/edit-credit-cards";
 	}
 
+	@PostMapping("customer/edit-credit-cards/delete/{cardId}")
+	public String deleteCard(@PathVariable("cardId") long cardId, RedirectAttributes attributes, Model model) {
+		creditCardService.deleteById(cardId);
+		attributes.addFlashAttribute("success", true);
+		return "redirect:/customer/edit-credit-cards";
+	}
+
 	@GetMapping("customer/purchase-history")
 	public String showPurchaseHistory(Model model) {
 		Customer customer = service.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
 		model.addAttribute("sales", saleService.findByCustomer(customer));
 		return "customer/purchase-history";
 	}
-
 }

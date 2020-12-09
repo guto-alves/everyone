@@ -22,23 +22,23 @@
 					<div class="card-body">
 						<div class="row">
 							<div class="col-sm-2">
-								<div style="min-height: 20px; min-width: 20px; width: 120px; height: 120px">
+								<div style="min-height: 20px; width: 100px; height: 120px">
 									<a href="#" th:href="@{/clothes/details/{id}(id=${item.clothe.id})}">
 										<img class="img-thumbnail" alt="Clothe image" th:src="${item.clothe.imageUrl}">
 									</a>
 								</div>
 							</div>
-							<div class="col-md-10">
-								<h5 class="card-title font-weight-bold" th:text="${item.clothe.name}">Name</h5>
+							<div class="col-lg-10">
+								<h6 class="card-title font-weight-bold" th:text="${item.clothe.name}">Name</h6>
 
 								<p class="card-text text-truncate" th:text="${item.clothe.description}">Description</p>
 
-								<p th:text="'Size: ' + 'M'"></p>
-
-								<p th:text="'Color: ' + ${item.clothe.color.name}"></p>
+								<span th:text="'Size: ' + 'M'"></span>
+								<br>
+								<span th:text="'Color: ' + ${item.clothe.color.name}"></span>
 
 								<form action="#" method="post" th:action="@{/cart/remove/{clotheId}(clotheId=${item.clothe.id})}">
-									<button type="submit" class="btn btn-outline-danger btn-sm" id="removeItem">Remove</button>
+									<button type="submit" id="removeItem" class="btn btn-sm btn-outline-danger mt-2">Remove</button>
 								</form>
 							</div>
 						</div>
@@ -47,12 +47,13 @@
 						<div class="form-row align-items-center">
 							<label class="col-sm-2 col-form-label">Amount:</label>
 							<div class="col-sm-2">
-								<input id="quantityInput" type="number" class="form-control" placeholder="Quantity" min="0" step="1"
+								<input id="quantityInput" type="number" class="form-control text-center" placeholder="Quantity" min="1" step="1"
 									th:value="${item.quantity}" th:name="${item.clothe.id}">
 							</div>
 
 							<div class="col text-right">
-								<h5 th:id="${item.clothe.id}" class="card-title" th:text="'$' + ${item.clothe.price * item.quantity}">R$ 349,99</h5>
+								<h5 th:id="${item.clothe.id}" class="card-title"
+									th:text="${'$' + #numbers.formatDecimal(item.clothe.price * item.quantity, 2, 2, 'POINT')}">R$ 349,99</h5>
 							</div>
 						</div>
 					</div>
@@ -67,7 +68,8 @@
 					<div class="card-body">
 						<label class="text-muted">Total</label>
 						<!-- <h3 th:text="${cart.total}"></h3> -->
-						<h3 id="total" th:text="${'$' + #aggregates.sum(cart.items.![clothe.price * quantity])}">$165,99</h3>
+						<h3 id="total"
+							th:text="${'$' + #numbers.formatDecimal(#aggregates.sum(cart.items.![clothe.price * quantity]), 2, 2, 'POINT')}">$165,99</h3>
 
 						<hr>
 
@@ -83,32 +85,36 @@
 	<script type="text/javascript" th:inline="javascript">
 		$("input").bind("keyup change", function() {
 			var newQuantity = $(this).val();
-			
+
 			if (newQuantity === "") {
 				newQuantity = 1;
 			}
-			
+
 			var clotheId = $(this).attr("name");
 
 			$("body").find("*").attr("disabled", "disabled");
-			$("body").find("a").click(function (e) { e.preventDefault(); });
-			
-			$.post("/cart/update-quantity", {
+			$("body").find("a").click(function(e) {
+				e.preventDefault();
+			});
+			$("body").find("button").click(function(e) {
+				e.preventDefault();
+			});
+
+			$.post("/cart/update", {
 				clotheid : clotheId,
-				newquantity : newQuantity
+				quantity : newQuantity
 			}, function(data) {
-				var values = data.split("\n");
-				
-				var updatedPrice = values[0].replace(",", ".");
-				var total = values[1].replace(",", ".");
-				
+				var updatedPrice = data.newItemPrice.replace(",", ".");
+				var total = data.total.replace(",", ".");
+
 				$("#" + clotheId).text("$" + updatedPrice);
 				$("#total").text("$" + total);
 			}).fail(function(data) {
-				alert( "Error: please try again later");
+				alert("Error: please try again later");
 			}).always(function(data) {
 				$("body").find("*").removeAttr("disabled");
 				$("body").find("a").unbind("click");
+				$("body").find("button").unbind("click");
 			});
 		});
 	</script>

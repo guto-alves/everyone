@@ -47,7 +47,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests()
 			.antMatchers("/cart/**")
 				.hasRole("CUSTOMER")
-			.antMatchers("/clothes/new", "/color/new", "/brand/new", "/category/new")
+			.antMatchers("/clothes/new", "/clothes/edit", "/colors", "/brands", "/categories")
 				.hasRole("ADMIN")
 			.antMatchers("/customer/**")
 				.hasAnyRole("CUSTOMER", "ADMIN")

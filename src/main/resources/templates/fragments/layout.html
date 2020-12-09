@@ -12,7 +12,6 @@
 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-<!-- jQuery -->
 <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
 
 <link rel="icon" href="https://img.icons8.com/plasticine/2x/clothes.png">
@@ -48,9 +47,7 @@
 						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
 							aria-haspopup="true" aria-expanded="false">Male</a>
 
-						<div class="dropdown-menu drowpdown-right-side" aria-labelledby="navbarDropdown">
-							<a class="dropdown-item" href="#">Malhas e Suéteres</a>
-							<a class="dropdown-item" href="#">Camisetas</a>
+						<div id="dropdownMenuMale" class="dropdown-menu drowpdown-right-side" aria-labelledby="navbarDropdown">
 						</div>
 					</li>
 
@@ -58,9 +55,38 @@
 						<a class="nav-link dropdown-toggle" href="#" th:href="@{/}" id="navbarDropdown" data-toggle="dropdown"
 							aria-haspopup="true" aria-expanded="false">Female</a>
 
+						<div id="dropdownMenuFemale" class="dropdown-menu animate fade-up drowpdown-right-side"
+							aria-labelledby="navbarDropdown">
+						</div>
+					</li>
+
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" href="#" th:href="@{/}" id="navbarDropdown" data-toggle="dropdown"
+							aria-haspopup="true" aria-expanded="false">Boy</a>
+
+						<div id="dropdownMenuBoy" class="dropdown-menu animate fade-up drowpdown-right-side"
+							aria-labelledby="navbarDropdown">
+						</div>
+					</li>
+
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" href="#" th:href="@{/}" id="navbarDropdown" data-toggle="dropdown"
+							aria-haspopup="true" aria-expanded="false">Girl</a>
+
+						<div id="dropdownMenuGirl" class="dropdown-menu animate fade-up drowpdown-right-side"
+							aria-labelledby="navbarDropdown">
+						</div>
+					</li>
+					
+					<li class="nav-item dropdown" sec:authorize="hasRole('ROLE_ADMIN')">
+						<a class="nav-link dropdown-toggle" href="#" th:href="@{/}" id="navbarDropdown" data-toggle="dropdown"
+							aria-haspopup="true" aria-expanded="false">Admin Options</a>
+
 						<div class="dropdown-menu animate fade-up drowpdown-right-side" aria-labelledby="navbarDropdown">
-							<a class="dropdown-item" href="#">Malhas e Suéteres</a>
-							<a class="dropdown-item" href="#">Camisetas</a>
+							<a class="dropdown-item" href="#" th:href="@{/clothes/new}">Clothes</a>
+							<a class="dropdown-item" href="#" th:href="@{/colors}">Colors</a>
+							<a class="dropdown-item" href="#" th:href="@{/brands}">Brands</a>
+							<a class="dropdown-item" href="#" th:href="@{/categories}">Categories</a>
 						</div>
 					</li>
 				</ul>
@@ -74,13 +100,8 @@
 				<div class="row ml-sm-2" sec:authorize="!isAuthenticated()">
 					<div class="col">
 						<div class="row">
-							<form action="#" th:action="@{/login}" method="post" class="form-inline my-2 my-lg-0">
-								<button type="submit" class="btn btn-outline-light my-2 my-sm-0 mr-sm-2">Login</button>
-							</form>
-
-							<form action="#" th:action="@{/register}" method="post" class="form-inline my-2 my-lg-0">
-								<button type="submit" class="btn btn-outline-light my-2 my-sm-0 mr-sm-4">Sign up</button>
-							</form>
+							<a th:href="@{/login}" class="btn btn-outline-light my-2 my-sm-0 mr-sm-2">Login</a>
+							<a th:href="@{/register}" class="btn btn-outline-light my-2 my-sm-0 mr-sm-4">Sign up</a>
 						</div>
 					</div>
 				</div>
@@ -163,7 +184,9 @@
 	</header>
 
 	<main role="main" class="container-fluid">
-		<th:block th:replace="${template}" />
+		<div class="container xd-container">
+			<th:block th:replace="${template}" />
+		</div>
 	</main>
 
 	<footer class="footer mt-auto py-3">
@@ -183,5 +206,18 @@
 
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
 		integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$.get("/categories/api", function(data) {
+				data.forEach(category => {
+					var gender = category.gender.charAt(0).toUpperCase() + category.gender.substring(1).toLowerCase();
+					
+					var item = '<a class="dropdown-item" href="/clothes/filter?gender=' + gender + '&category='+ category.name +'">' + category.name + '</a>';
+					
+					$("#dropdownMenu" + gender).append(item);
+				});
+			});
+		});
+	</script>
 </body>
 </html>

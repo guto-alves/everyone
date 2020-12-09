@@ -59,6 +59,20 @@ public class Customer {
 	public Customer() {
 	}
 
+	public Customer(@NotBlank(message = "Please provide your email address.") @Email String email,
+			@NotBlank(message = "Please provide a secure password.") String password,
+			@NotBlank(message = "First name must not be blank.") String firstName,
+			@NotBlank(message = "Last name must not be blank.") String lastName,
+			@NotBlank(message = "Please select a gender.") String gender,
+			@NotNull(message = "Please provide your date of birth.") Date birthDate) {
+		this.email = email;
+		this.password = password;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.gender = gender;
+		this.birthDate = birthDate;
+	}
+
 	public Customer(String email, @NotBlank String password, boolean enabled, String role, @NotBlank String firstName,
 			@NotBlank String lastName, @NotBlank String gender, boolean saveCards, @NotNull Date birthDate, Cart cart,
 			List<Sale> sales, List<CreditCard> cards) {
@@ -75,28 +89,6 @@ public class Customer {
 		this.sales = sales;
 		this.cards = cards;
 	}
-
-// Utility methods
-
-//	public void addCart(Cart cart) {
-//		cart.setCustomer(this);
-//		this.cart = cart;
-//	}
-//
-//	public void addSale(Sale sale) {
-//		sales.add(sale);
-//		sale.setCustomer(this);
-//	}
-//
-//	public void addCard(CreditCard card) {
-//		cards.add(card);
-//		card.setCustomer(this);
-//	}
-//
-//	public void removeCard(CreditCard card) {
-//		cards.remove(card);
-//		card.setCustomer(null);
-//	}
 
 	public String getEmail() {
 		return email;

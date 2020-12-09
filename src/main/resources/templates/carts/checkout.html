@@ -2,85 +2,116 @@
 <html lang="en" xmlns:th="https://thymeleaf.org" th:replace="~{fragments/layout :: base('Checkout', ~{::body})}">
 <body>
 	<div class="container-fluid">
-		<div class="row mt-3">
+		<form action="#" method="post" th:action="@{/cart/checkout/}" th:object="${form}">
+			<div class="row mt-3">
 
-			<!-- Payment Method -->
-			<div class="col-md-8">
-				<h3 class="font-weight-bold">Checkout</h3>
-				<hr>
-				
-				<h5 class="font-weight-bold">Payment Method</h5>
-				
-				<div class="custom-control custom-radio">
-					<input type="radio" id="slipRadio" name="paymentMethod" class="custom-control-input" value="boleto" checked="checked">
-					<label class="custom-control-label" for="slipRadio">Pay with Bank Slip</label>
-				</div>
+				<!-- Payment Method -->
+				<div class="col-md-8">
+					<h3 class="font-weight-bold">Checkout</h3>
+					<hr>
 
-				<div class="custom-control custom-radio">
-					<input type="radio" id="cardRadio" name="paymentMethod" class="custom-control-input" value="card">
-					<label class="custom-control-label" for="cardRadio">Credit card</label>
-				</div>
+					<h5 class="font-weight-bold">Payment Method</h5>
 
-				<hr>
-				
-				<!-- Form to use new card -->
-				<div class="card mt-3">
-					<div class="card-header">
-						<h4>Add a new card</h4>
+					<div class="custom-control custom-radio">
+						<input type="radio" id="slipRadio" th:field="*{method}" name="method" class="custom-control-input" value="slip"
+							required>
+						<label class="custom-control-label" for="slipRadio">Pay with Bank Slip</label>
 					</div>
-					<div class="card-body">
-						<div class="form-group">
-							<label for="nameOnCardInput">Name on Card</label>
-							<input type="text" id="nameOnCardInput" class="form-control" placeholder="Name on Card">
+
+					<div class="custom-control custom-radio">
+						<input type="radio" id="cardRadio" th:field="*{method}" name="method" class="custom-control-input" value="card">
+						<label class="custom-control-label" for="cardRadio">Credit card</label>
+					</div>
+
+					<hr>
+
+					<!-- Credit cart section -->
+					<div id="cardContainer" style="display: none;">
+						<div class="form-group" th:if="${!#lists.isEmpty(cards)}">
+							<label for="cardSelect" class="font-weight-bold d-block">Your Cards</label>
+							<select id="cardSelect" class="custom-select" style="width: 300px;" th:field="*{selectedCard}">
+								<option th:each="card : ${cards}" th:value="${card.id}" th:text="${#strings.substring(card.number, 12,15)}">****
+									**** **** 3800 | EXP: 08/28</option>
+							</select>
 						</div>
 
-						<div class="form-group">
-							<label for="cardNumberInput">CPF</label>
-							<input type="text" id="cardNumberInput" class="form-control" placeholder="CPF">
-						</div>
+						<div id="newCardDiv" class="card mt-3">
+							<div class="card-body" th:object="${newCard}">
+								<div class="form-row">
+									<div class="col-md-8">
+										<div class="form-group">
+											<label for="nameOnCardInput">Name on Card</label>
+											<input type="text" id="nameOnCardInput" name="name" class="form-control" placeholder="Name on Card"
+												th:field="*{name}">
+										</div>
+									</div>
+									<div class="col-md-4">
+										<div class="form-group">
+											<label for="cardNumberInput">CPF</label>
+											<input type="text" id="cardNumberInput" name="cpf" class="form-control" placeholder="CPF" maxlength="11"
+												pattern="\d{11}" th:field="*{cpf}">
+										</div>
+									</div>
+								</div>
 
-						<div class="form-group">
-							<label for="cardNumberInput">Card Number</label>
-							<input type="text" id="cardNumberInput" class="form-control" placeholder="Card Number">
-						</div>
-
-						<div class="form-row">
-							<div class="col">
 								<div class="form-group">
-									<label for="cardNumberInput">MM</label>
-									<input type="month" id="cardNumberInput" class="form-control" placeholder="MM">
+									<label for="cardNumberInput">Card Number</label>
+									<input type="text" id="cardNumberInput" name="number" class="form-control" placeholder="Card Number"
+										maxlength="16" pattern="\d{16}" th:field="*{number}">
+								</div>
+
+								<div class="form-row">
+									<div class="col">
+										<div class="form-group">
+											<label for="monthSelect">MM</label>
+											<select class="custom-select" id="monthSelect" th:field="*{month}" required="required">
+												<option value="" selected>MM</option>
+												<option th:each="month : ${#numbers.sequence(1, 12, 1)}"
+													th:value="${#numbers.formatInteger(month, 2, 'POINT')}"
+													th:text="${#numbers.formatInteger(month, 2, 'POINT')}"></option>
+											</select>
+										</div>
+									</div>
+
+									<div class="col mr-3">
+										<div class="form-group">
+											<label for="yearSelect">YYYY</label>
+											<select class="custom-select" id=yearSelect th:field="*{year}" required>
+												<option value="" selected>YYYY</option>
+												<option th:each="year : ${#numbers.sequence(2020, 2040, 1)}" th:value="${year}" th:text="${year}"></option>
+											</select>
+										</div>
+									</div>
+
+									<div class="col">
+										<div class="form-group">
+											<label for="securityCodeInput">Security Code</label>
+											<input type="text" id="securityCodeInput" name="securityCode" class="form-control"
+												placeholder="Security Code" th:field="*{securityCode}">
+										</div>
+									</div>
 								</div>
 							</div>
 
-							<div class="col mr-3">
-								<div class="form-group">
-									<label for="cardNumberInput">YYYY</label>
-									<input type="text" id="cardNumberInput" class="form-control" placeholder="YYYY">
-								</div>
-							</div>
-
-							<div class="col">
-								<div class="form-group">
-									<label for="securityCodeInput">Security Code</label>
-									<input type="text" id="securityCodeInput" class="form-control" placeholder="Security Code">
-								</div>
+							<div class="form-check card-footer text-center">
+								<input class="form-check-input" type="checkbox" id="flexCheckDefault" name="rememberCard"
+									th:field="*{rememberCard}">
+								<label class="form-check-label" for="flexCheckDefault">Remember this card</label>
 							</div>
 						</div>
 					</div>
 				</div>
-			</div>
 
-			<!-- Summary -->
-			<div class="col-md-4">
-				<h3 class="text-primary font-weight-bold">Summary</h3>
+				<!-- Summary -->
+				<div class="col-md-4">
+					<h3 class="text-primary font-weight-bold">Summary</h3>
 
-				<div class="card shadow-lg">
-					<div class="card-body">
-						<label class="text-muted">Original price</label>
-						<h4 th:text="${'$' + #aggregates.sum(cart.items.![clothe.price * quantity])}">$ 165,99</h4>
+					<div class="card shadow-lg">
+						<div class="card-body">
+							<label class="text-muted">Original price</label>
+							<h4 th:text="${'$' + #aggregates.sum(cart.items.![clothe.price * quantity])}">$ 165,99</h4>
 
-						<label class="text-muted">
-							Discounts</label>
+							<label class="text-muted"> Discounts</label>
 							<h4>- $0,00</h4>
 
 							<hr>
@@ -90,7 +121,8 @@
 									<h4 class="font-weight-bold">Total</h4>
 								</div>
 								<div class="col text-right">
-									<h3 class="font-weight-bold" th:text="${'$' + #aggregates.sum(cart.items.![clothe.price * quantity])}">$ 100,00</h3>
+									<h3 class="font-weight-bold" th:text="${'$' + #aggregates.sum(cart.items.![clothe.price * quantity])}">$
+										100,00</h3>
 								</div>
 							</div>
 
@@ -102,17 +134,26 @@
 								</span>
 							</div>
 
-							<form action="#" method=post th:action="@{/cart/checkout}">
-								<button type="submit" class="btn btn-success form-control">
-									<b>Complete Payment</b>
-								</button>
-							</form>
+							<button type="submit" class="btn btn-success form-control">
+								<b>Complete Payment</b>
+							</button>
+						</div>
 					</div>
 				</div>
+
 			</div>
-
-
-		</div>
+		</form>
 	</div>
+	<script type="text/javascript">
+		$('input[type="radio"]').change(function() {
+			var method = $(this).val();
+
+			if (method === "slip") {
+				$("#cardContainer").hide();
+			} else {
+				$("#cardContainer").show();
+			}
+		});
+	</script>
 </body>
 </html>

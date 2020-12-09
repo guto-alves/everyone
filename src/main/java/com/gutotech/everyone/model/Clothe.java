@@ -15,6 +15,8 @@ import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.validator.constraints.URL;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -27,7 +29,6 @@ public class Clothe {
 	@Column(nullable = false)
 	private String name;
 
-	@NotBlank
 	@Column(length = 500)
 	private String description;
 
@@ -35,33 +36,47 @@ public class Clothe {
 	private double price = 10;
 
 	@NotNull
-	private double discount;
+	private int discount;
 
 	private int stock = 1;
 
+	@URL
 	private String imageUrl;
-
-	@ManyToOne
-	private Color color;
-
-	@OneToMany(mappedBy = "id.clothe")
-	private Set<ClotheSize> sizes = new HashSet<>();
-
-	@ManyToOne
-	private Brand brand;
 
 	@ManyToOne
 	private Category category;
 
+	@ManyToOne
+	private Color color;
+
+	@ManyToOne
+	private Brand brand;
+
+	@OneToMany(mappedBy = "id.clothe")
+	private Set<ClotheSize> sizes = new HashSet<>();
+
 	@JsonIgnore
 	@OneToMany(mappedBy = "clothe")
-	private List<Reviews> reviews = new ArrayList<>();
+	private List<Review> review = new ArrayList<>();
 
 	public Clothe() {
 	}
 
-	public Clothe(long id, @NotBlank String name, @NotBlank String description, @NotNull double price, Color color,
-			int stock, Brand brand, Category category, List<Reviews> reviews) {
+	public Clothe(String name, String description, double price, int discount, int stock, String imageUrl,
+			Category category, Color color, Brand brand) {
+		this.name = name;
+		this.description = description;
+		this.price = price;
+		this.discount = discount;
+		this.stock = stock;
+		this.imageUrl = imageUrl;
+		this.category = category;
+		this.color = color;
+		this.brand = brand;
+	}
+
+	public Clothe(long id, String name, String description, double price, Color color, int stock, Brand brand,
+			Category category, List<Review> review) {
 		this.id = id;
 		this.name = name;
 		this.description = description;
@@ -70,7 +85,7 @@ public class Clothe {
 		this.stock = stock;
 		this.brand = brand;
 		this.category = category;
-		this.reviews = reviews;
+		this.review = review;
 	}
 
 	public long getId() {
@@ -105,11 +120,11 @@ public class Clothe {
 		this.price = price;
 	}
 
-	public double getDiscount() {
+	public int getDiscount() {
 		return discount;
 	}
 
-	public void setDiscount(double discount) {
+	public void setDiscount(int discount) {
 		this.discount = discount;
 	}
 
@@ -145,8 +160,8 @@ public class Clothe {
 		this.category = category;
 	}
 
-	public List<Reviews> getReviews() {
-		return reviews;
+	public List<Review> getReviews() {
+		return review;
 	}
 
 	public Set<ClotheSize> getSizes() {

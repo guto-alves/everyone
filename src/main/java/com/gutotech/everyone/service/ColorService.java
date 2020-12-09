@@ -14,14 +14,19 @@ public class ColorService {
 	private ColorRepository repository;
 
 	public List<Color> findAll() {
-		return repository.findAll();
+		return repository.findAllByOrderByName();
 	}
 
 	public Color findById(long id) {
 		return repository.findById(id).orElse(null);
 	}
-	public void save(Color color)  {
+
+	public void save(Color color) {
 		repository.save(color);
 	}
-	
+
+	public void deleteById(Long id) {
+		repository.deleteById(id);
+	}
+
 }

@@ -90,3 +90,12 @@
 	position: sticky;
 	top: 0;
 }
+
+.container-scroll {
+	overflow-y: auto;
+	height: 180px;
+}
+
+.star-checked {
+	color: orange;
+}

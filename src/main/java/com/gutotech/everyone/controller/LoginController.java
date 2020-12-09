@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.gutotech.everyone.model.Customer;
 import com.gutotech.everyone.service.CustomerService;
@@ -17,12 +17,12 @@ public class LoginController {
 	@Autowired
 	private CustomerService service;
 
-	@RequestMapping("login")
+	@GetMapping("login")
 	public String initLoginForm() {
 		return "login/login";
 	}
 
-	@RequestMapping("register")
+	@GetMapping("register")
 	public String initRegistrationForm(Model model) {
 		model.addAttribute("customer", new Customer());
 		return "login/register";

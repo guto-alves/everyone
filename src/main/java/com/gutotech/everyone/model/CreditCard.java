@@ -124,4 +124,10 @@ public class CreditCard {
 			return false;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "CreditCard [id=" + id + ", name=" + name + ", cpf=" + cpf + ", number=" + number + ", month=" + month
+				+ ", year=" + year + ", securityCode=" + securityCode + "]";
+	}
 }

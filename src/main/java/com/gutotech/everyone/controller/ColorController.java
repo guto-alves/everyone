@@ -10,13 +10,16 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.gutotech.everyone.model.Color;
 import com.gutotech.everyone.service.ColorService;
 
 @Controller
+@RequestMapping("colors")
 public class ColorController {
 
 	@Autowired
@@ -27,13 +30,13 @@ public class ColorController {
 		return service.findAll();
 	}
 
-	@GetMapping("/color/new")
+	@GetMapping
 	public String initCreationForm(Model model) {
 		model.addAttribute("color", new Color());
 		return "colors/color-form";
 	}
 
-	@PostMapping("/color/new")
+	@PostMapping
 	public String processCreationForm(@Valid Color color, BindingResult result, RedirectAttributes redirectAttributes,
 			Model model) {
 		if (result.hasErrors()) {
@@ -50,7 +53,13 @@ public class ColorController {
 
 		redirectAttributes.addFlashAttribute("message", color.getName() + " was added!");
 
-		return "redirect:/color/new";
+		return "redirect:/colors";
+	}
+
+	@PostMapping("remove/{color}")
+	public String removeColor(@PathVariable("color") Long colorId) {
+		service.deleteById(colorId);
+		return "redirect:/colors";
 	}
 
 }

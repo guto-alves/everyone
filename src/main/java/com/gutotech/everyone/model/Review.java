@@ -1,35 +1,52 @@
 package com.gutotech.everyone.model;
 
+import java.util.Date;
+
+import javax.persistence.Basic;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-public class Reviews {
+public class Review {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@NotNull
+	private int stars;
+
+	@Column(nullable = true, length = 300)
 	private String comment;
 
-	private float stars;
+	@Basic
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date date;
 
 	@JsonIgnore
 	@ManyToOne
 	private Clothe clothe;
 
-	public Reviews() {
+	@ManyToOne
+	private Customer customer;
+
+	public Review() {
 	}
 
-	public Reviews(Long id, String comment, float stars, Clothe clothe) {
-		this.id = id;
-		this.comment = comment;
+	public Review(int stars, String comment, Date date, Clothe clothe, Customer customer) {
 		this.stars = stars;
+		this.comment = comment;
+		this.date = date;
 		this.clothe = clothe;
+		this.customer = customer;
 	}
 
 	public Long getId() {
@@ -40,6 +57,14 @@ public class Reviews {
 		this.id = id;
 	}
 
+	public int getStars() {
+		return stars;
+	}
+
+	public void setStars(int stars) {
+		this.stars = stars;
+	}
+
 	public String getComment() {
 		return comment;
 	}
@@ -48,12 +73,12 @@ public class Reviews {
 		this.comment = comentario;
 	}
 
-	public float getStars() {
-		return stars;
+	public Date getDate() {
+		return date;
 	}
 
-	public void setStars(float stars) {
-		this.stars = stars;
+	public void setDate(Date date) {
+		this.date = date;
 	}
 
 	public Clothe getClothe() {
@@ -62,6 +87,14 @@ public class Reviews {
 
 	public void setClothe(Clothe clothe) {
 		this.clothe = clothe;
+	}
+
+	public Customer getCustomer() {
+		return customer;
+	}
+
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
 	}
 
 	@Override
@@ -80,7 +113,7 @@ public class Reviews {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Reviews other = (Reviews) obj;
+		Review other = (Review) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;
