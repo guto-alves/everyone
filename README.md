@@ -21,6 +21,11 @@ Or you can run it from Maven directly using the Spring Boot Maven plugin. If you
 ./mvnw spring-boot:run
 ```
 
+### Login with Admin Role
+Email: admin@everyone.com 
+
+Password: 123
+
 ## Working with Everyone in your IDE
 
 ### Prerequisites
