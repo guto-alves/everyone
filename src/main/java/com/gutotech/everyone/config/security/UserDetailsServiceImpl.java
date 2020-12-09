@@ -24,7 +24,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		Customer customer = customerRepository.getCustomerByEmail(email);
 
 		if (customer == null) {
-			throw new UsernameNotFoundException("Invalid email or password.");
+			throw new UsernameNotFoundException("Invalid email or password!");
 		}
 
 		return new User(customer.getEmail(), customer.getPassword(),

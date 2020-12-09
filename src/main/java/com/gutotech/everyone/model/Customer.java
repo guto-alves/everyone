@@ -39,7 +39,7 @@ public class Customer {
 	private String gender;
 	private boolean saveCards;
 
-	@NotNull(message = "Please provide your date of birth.")
+	@NotNull(message = "Please provide your birth date.")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@Basic
 	@Temporal(TemporalType.DATE)
@@ -64,7 +64,7 @@ public class Customer {
 			@NotBlank(message = "First name must not be blank.") String firstName,
 			@NotBlank(message = "Last name must not be blank.") String lastName,
 			@NotBlank(message = "Please select a gender.") String gender,
-			@NotNull(message = "Please provide your date of birth.") Date birthDate) {
+			@NotNull(message = "Please provide your birth date.") Date birthDate) {
 		this.email = email;
 		this.password = password;
 		this.firstName = firstName;

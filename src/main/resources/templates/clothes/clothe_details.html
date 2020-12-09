@@ -70,7 +70,7 @@
 
 			<hr>
 
-			<p th:if="${#lists.isEmpty(reviews)}">This product has no reviews yet</p>
+			<p th:if="${#lists.isEmpty(reviews)}">This product has no reviews yet...</p>
 
 			<div th:unless="${#lists.isEmpty(reviews)}">
 				<div th:each="review : ${reviews}">
@@ -102,10 +102,10 @@
 			<div class="form-group">
 				<label class="font-weight-bold">Size:</label>
 				<select class="form-control">
-					<option>P</option>
+					<option>S</option>
 					<option>M</option>
-					<option>G</option>
-					<option>GG</option>
+					<option>L</option>
+					<option>XL</option>
 				</select>
 			</div>
 

@@ -98,14 +98,14 @@ public class TestConfig implements CommandLineRunner {
 		Category category2 = new Category("Pants", Gender.MALE);
 		Category category3 = new Category("Team shirts", Gender.MALE);
 		Category category4 = new Category("Polo shirts", Gender.MALE);
-		Category category5 = new Category("Tshirts", Gender.MALE);
+		Category category5 = new Category("T-shirts", Gender.MALE);
 		Category category6 = new Category("Jackets & Coats", Gender.MALE);
 		Category category7 = new Category("Hoodies", Gender.MALE);
 		Category category8 = new Category("Plus Size", Gender.MALE);
 		Category category9 = new Category("Shorts", Gender.MALE);
 		Category category10 = new Category("Uniforms", Gender.MALE);
 
-		Category category11 = new Category("Jeans pants", Gender.FEMALE);
+		Category category11 = new Category("Jeans/denim", Gender.FEMALE);
 		Category category12 = new Category("Knitwear and Sweaters", Gender.FEMALE);
 		Category category13 = new Category("Dresses", Gender.FEMALE);
 		Category category14 = new Category("Tops", Gender.FEMALE);
@@ -126,7 +126,7 @@ public class TestConfig implements CommandLineRunner {
 		Calendar calendar = Calendar.getInstance();
 		calendar.set(2000, 03, 27);
 		Customer customer1 = new Customer("gustavo@gmail.com", "123", "Gustavo", "Alves", "Male", calendar.getTime());
-		Customer customer2 = new Customer("beatris@gmail.com", "123", "Beatris", "Silva", "Female", calendar.getTime());
+		Customer customer2 = new Customer("beatris@gmail.com", "123", "Beatris", "Franklin", "Female", calendar.getTime());
 		Customer customer3 = new Customer("murillo@gmail.com", "123", "Murillo", "Meira", "Male", calendar.getTime());
 
 		customerService.register(customer1);
