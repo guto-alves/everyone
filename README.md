@@ -22,9 +22,16 @@ Or you can run it from Maven directly using the Spring Boot Maven plugin. If you
 ```
 
 ### Login as Everyone Admin
-Email: admin@everyone.com 
+Admin Account
 
-Password: 123
+- Email: admin@everyone.com
+
+- Password: 123
+
+Logged in as an administrator, you can see a special drop-down menu in the navigation bar:
+
+![Admin nav item](https://user-images.githubusercontent.com/48946749/101681945-b04c2e80-3a41-11eb-8864-46d8dd2b9ee4.png)
+
 
 ## Working with Everyone in your IDE
 
