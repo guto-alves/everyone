@@ -11,7 +11,7 @@ cd everyone
 java -jar target/*.jar
 ```
 
-You can then access everyone here: http://localhost:8080/clothes
+You can then access Everyone here: http://localhost:8080/clothes
 
 <img width="1042" alt="everyone-screenshot" src="https://user-images.githubusercontent.com/48946749/101674460-4b8bd680-3a37-11eb-88ce-20182df01d65.png">
 
