@@ -69,3 +69,7 @@ The following items should be installed in your system:
 4) Navigate to Everyone
 
     Visit [http://localhost:8080/clothes](http://localhost:8080/clothes) in your browser.
+    
+    
+## License
+The Everyone application is licensed under the MIT License - see the [LICENSE](https://github.com/guto-alves/everyone/blob/main/LICENSE) file for details.
