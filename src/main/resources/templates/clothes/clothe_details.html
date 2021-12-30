@@ -111,11 +111,7 @@
 
 			<a id="goToCart" href="#" th:href="@{/cart}" class="btn btn-success btn-block mb-2">Go to cart</a>
 
-			<button type="button" id="addToCart" class="btn btn-info btn-block mb-2">Add to cart</button>
-
-			<form action="#" method="post">
-				<a href="#" class="btn btn-outline-success btn-block" role="button">Buy now</a>
-			</form>
+			<button type="button" id="addToCart" class="btn btn-info form-control mb-2">Add to cart</button>
 
 			<a sec:authorize="hasRole('ROLE_ADMIN')" href="#" class="btn btn-outline-secondary btn-block mt-3" role="button"
 				th:href="@{/clothes/edit/{id}(id=${clothe.id})}">Edit Clothe</a>

@@ -7,11 +7,6 @@
 .dropdown-left-side {
 	width: 220px !important;
 	left: -160px !important;
-	box-shadow: 0px 5px 25px black;
-}
-
-.drowpdown-right-side {
-	box-shadow: 0px 5px 25px black;
 }
 
 /* styles for Cart */
@@ -24,7 +19,6 @@
 	padding: 20px;
 	width: 300px !important;
 	left: -200px !important;
-	box-shadow: 0px 5px 30px black;
 }
 
 .total-header-section {

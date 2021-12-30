@@ -1,30 +1,37 @@
 <!DOCTYPE html>
-<html xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="https://thymeleaf.org"
+<html xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	xmlns:th="https://thymeleaf.org"
 	th:replace="~{fragments/layout :: base('Everyone', ~{::body})}">
 <body>
-	<div class="container-fluid col-md-8">
+	<div class="container-fluid col-md-10 mt-3">
 		<div class="alert alert-success mt-3" th:if="${message != null}">
 			<button type="button" class="close" data-dismiss="alert">&times;</button>
-			<span th:text="${message}">Your changes have been successfully saved.</span>
+			<span th:text="${message}">Your changes have been successfully
+				saved.</span>
 		</div>
-		
-		<div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
+
+		<div id="carouselExampleSlidesOnly" class="carousel slide"
+			data-ride="carousel">
 			<div class="carousel-inner">
 				<div class="carousel-item active">
-					<img src="https://dafitistatic-a.akamaihd.net/dynamic_yield/cms/static/images/24e5c9de9fa55__masc70OFF.gif"
-						class="d-block w-100" alt="...">
+					<a href="#" th:href="@{/clothes/filter?gender=Female}">
+						<img th:src="@{/images/image1.gif}" class="d-block w-100"
+							alt="...">
+					</a>
 				</div>
 			</div>
 		</div>
 
 		<hr>
 
-		<div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
+		<div id="carouselExampleSlidesOnly" class="carousel slide"
+			data-ride="carousel">
 			<div class="carousel-inner">
 				<div class="carousel-item active">
-					<img
-						src="https://dafitistatic-a.akamaihd.net/dynamic_yield/cms/static/images/295cb0315d3da___SPECIALPLACEMENT_B2B_1064x200.gif"
-						class="d-block w-100" alt="...">
+					<a href="#" th:href="@{/clothes/filter?gender=Male}">
+						<img th:src="@{/images/image2.png}" class="d-block w-100"
+							alt="...">
+					</a>
 				</div>
 			</div>
 		</div>

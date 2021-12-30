@@ -14,7 +14,7 @@
 							<input type="reset" class="btn btn-sm btn-outline-secondary form-control" value="Reset">
 						</div>
 						<div class="col-md-6">
-							<a th:href="@{/clothes}" class="btn btn-sm btn-outline-secondary form-control">Clear filters</a>
+							<a th:href="@{/clothes}" class="btn btn-sm btn-outline-secondary form-control">Clear</a>
 						</div>
 					</div>
 				</div>
@@ -22,7 +22,7 @@
 				<!-- Gender -->
 				<div class="accordion" id="genderAccordion">
 					<div class="card">
-						<div class="card-header" id="headingGender">
+						<div class="card-header bg-white" id="headingGender">
 							<h2 class="mb-0">
 								<button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
 									data-target="#collapseGender" aria-expanded="false" aria-controls="collapseGender">Gender</button>
@@ -44,13 +44,13 @@
 				<!-- Category -->
 				<div class="accordion" id="categoryAccordion">
 					<div class="card">
-						<div class="card-header" id="headingCategory">
+						<div class="card-header bg-white" id="headingCategory">
 							<h2 class="mb-0">
 								<button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
 									data-target="#collapseCategory" aria-expanded="false" aria-controls="collapseCategory">Category</button>
 							</h2>
 						</div>
-						<div id="collapseCategory" class="collapse show" aria-labelledby="headingCategory"
+						<div id="collapseCategory" class="collapse" aria-labelledby="headingCategory"
 							data-parent="#categoryAccordion">
 							<div class="card-body">
 								<div class="input-group mb-3">
@@ -72,7 +72,7 @@
 				<!-- Color -->
 				<div class="accordion" id="colorAccordion">
 					<div class="card">
-						<div class="card-header" id="headingColor">
+						<div class="card-header bg-white" id="headingColor">
 							<h2 class="mb-0">
 								<button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
 									data-target="#collapseColor" aria-expanded="false" aria-controls="collapseBrand">Color</button>
@@ -98,7 +98,7 @@
 				<!-- Brand -->
 				<div class="accordion" id="brandAccordion">
 					<div class="card">
-						<div class="card-header" id="headingBrand">
+						<div class="card-header bg-white" id="headingBrand">
 							<h2 class="mb-0">
 								<button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
 									data-target="#collapseBrand" aria-expanded="false" aria-controls="collapseBrand">Brand</button>
@@ -124,7 +124,7 @@
 				<!-- Prices -->
 				<div class="accordion" id="priceAccordion">
 					<div class="card">
-						<div class="card-header" id="headingPrice">
+						<div class="card-header bg-white" id="headingPrice">
 							<h2 class="mb-0">
 								<button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
 									data-target="#collapsePrice" aria-expanded="false" aria-controls="collapsePrice">Price</button>
@@ -177,7 +177,7 @@
 			<hr>
 			<div class="row">
 				<div class="col-md-4" th:each="clothe : ${clothes}">
-					<div class="card mb-4 shadow-lg" style="height: 400px;">
+					<div class="card mb-4" style="height: 400px;">
 						<a href="#" th:href="@{/clothes/details/{id}(id=${clothe.id}) }">
 							<img class="card-img-top" alt="Clothe image" th:src="${clothe.imageUrl}">
 						</a>
@@ -191,28 +191,6 @@
 			</div>
 		</div>
 	</div>
-
-	<hr>
-
-	<nav aria-label="Page navigation">
-		<ul class="pagination justify-content-center">
-			<li class="page-item disabled">
-				<a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-			</li>
-			<li class="page-item">
-				<a class="page-link" href="#">1</a>
-			</li>
-			<li class="page-item active">
-				<a class="page-link" href="#">2</a>
-			</li>
-			<li class="page-item">
-				<a class="page-link" href="#">3</a>
-			</li>
-			<li class="page-item">
-				<a class="page-link" href="#">Next</a>
-			</li>
-		</ul>
-	</nav>
 
 	<script th:inline="javascript">
 		$(document).ready(function() {
